@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <div id="nav">
+        <ul class="menu">
+            <li class="menu">
+                <p:link value="Students" outcome="/students/addStudent.xhtml" />
+                <ul>
+                    <li><p:link value="Add student" outcome="/students/addStudent.xhtml" /></li>
+                    <li><p:link value="Add student" outcome="/index.xhtml" /></li>
+                </ul>
+            </li>
+            <li class="menu">
+                <p:link value="Courses" outcome="/courses/showCourses.xhtml" />
+                <ul>
+                    <li><p:link value="Add course" outcome="/courses/addCourse.xhtml" /></li>
+                    <li><p:link value="Add lecture" outcome="/courses/lectures/addLecture.xhtml" /></li>
+                </ul>
+            </li>
+            <li class="menu"><a href="#">Teachers</a></li>
+        </ul>
+    </div>
+</ui:composition>

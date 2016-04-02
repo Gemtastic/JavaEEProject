@@ -1,31 +1,34 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.managedbeans;
 
 //import com.gemtastic.attendancesystem.services.CRUDservices.StudentEJBService;
+import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
+import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
+import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Students;
 import java.util.Date;
-//import javax.ejb.EJB;
-//import javax.faces.application.FacesMessage;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-//import javax.faces.context.FacesContext;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-//import org.primefaces.model.UploadedFile;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
  * @author Gemtastic
  */
 @ManagedBean(name = "student")
-@RequestScoped
+@ViewScoped
 public class StudentMB {
     
-//    @EJB
-//    StudentEJBService sEJB;
+    @EJB
+    LocalStudentEJBService sEJB;
+    
+    @EJB
+    LocalCourseEJBService cEJB;
     
     public Date regdate;
     public String firstname;
@@ -33,43 +36,42 @@ public class StudentMB {
     public long socialSecurityNo;
     public String email;
     public int phone;
-//    private UploadedFile file;
+    private UploadedFile file;
+    private List<Students> students;
     
-    public Students s = new Students();
+    public Students student;
     
-    public void onSubmit(ActionEvent e){
-
-        s.setFirstname(firstname);
-        s.setLastname(lastname);
-        s.setSocSecNo(socialSecurityNo);
-        s.setEmail(email);
-        if(phone != 0){
-            s.setPhone(phone);
-        }
-        s.setRegDate(new Date());
-//        s.setImages(file.getContents());
-//        sEJB.upsert(s);
+    @PostConstruct
+    public void init(){
+        student = new Students();
+        students = sEJB.findAll();
     }
 
     public StudentMB() {
     }
     
+    public void addToCourse(Courses course) {
+        //System.out.println("Course: " + course + ", Student: " + student);
+        List<Students> list = course.getStudentsList();
+        list.add(student);
+        course.setStudentsList(list);
+        cEJB.upsert(course);
+    }
     
-    
-//    public UploadedFile getFile() {
-//        return file;
-//    }
-// 
-//    public void setFile(UploadedFile file) {
-//        this.file = file;
-//    }
-//     
-//    public void upload() {
-//        if(file != null) {
-//            FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
-//            FacesContext.getCurrentInstance().addMessage(null, message);
-//        }
-//    }
+    public UploadedFile getFile() {
+        return file;
+    }
+ 
+    public void setFile(UploadedFile file) {
+        this.file = file;
+    }
+     
+    public void upload() {
+        if(file != null) {
+            FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+    }
 
     public String getFirstname() {
         return firstname;
@@ -120,11 +122,19 @@ public class StudentMB {
     }
 
     public Students getStudent() {
-        return s;
+        return student;
     }
 
     public void setStudent(Students student) {
-        this.s = student;
+        this.student = student;
+    }
+
+    public List<Students> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Students> students) {
+        this.students = students;
     }
     
 }

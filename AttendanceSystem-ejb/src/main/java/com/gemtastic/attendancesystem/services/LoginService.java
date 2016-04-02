@@ -26,11 +26,11 @@ public class LoginService implements LoginServices{
     public boolean verify(String username, String password) {
         boolean success = false;
         
-        Users user = uEJB.findByUser(username);
-        
-        if(user != null && user.getPassword() != null){
-            success = BCrypt.checkpw(password, user.getPassword());
-        }
+//        Users user = uEJB.findByUser(username);
+//        
+//        if(user != null && user.getPassword() != null){
+//            success = BCrypt.checkpw(password, user.getPassword());
+//        }
         return success;
     }
 

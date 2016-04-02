@@ -1,13 +1,15 @@
 package com.gemtastic.attendancesystem.managedbeans;
 
-import com.gemtastic.attendancesystem.services.CRUDservices.LectureEJBService;
-import com.gemtastic.attendancesystem.services.CRUDservices.StudentEJBService;
+import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
+import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalLectureEJBService;
+import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Employees;
 import com.gemtastic.attendencesystem.enteties.Lectures;
 import com.gemtastic.attendencesystem.enteties.Students;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 
@@ -34,15 +36,24 @@ public class LectureMB {
         lEJB.upsert(l);
     }
     
+    @PostConstruct
+    public void init() {
+        lectures = lEJB.findAll();
+        courses = cEJB.findAll();
+    }
     
     @EJB
-    private LectureEJBService lEJB;
+    private LocalLectureEJBService lEJB;
     
     @EJB
-    private StudentEJBService sEJB;
+    private LocalStudentEJBService sEJB;
     
-    public List<Lectures> lectures = lEJB.findAll();
+    @EJB
+    private LocalCourseEJBService cEJB;
+    
+    public List<Lectures> lectures;
     public List<Lectures> attendance;
+    public List<Courses> courses;
     
     public List<Students> getStudentList(){
         Lectures lecture = new Lectures();
@@ -57,17 +68,79 @@ public class LectureMB {
         Lectures l = lEJB.readOne(lecture);
         return l;
     }
-//    
-//    public Lectures lecture = new Lectures();
-//    
-//    public List<Lectures> findLecturesByDate(SelectEvent event) {
-//        SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
-//        LocalDate lD = LocalDate.parse(date.format(event.getObject()));
-//        List<Lectures> lectures = lEJB.findByDate(lD);
-//        return lectures;
-//    }
-//    
-//    public List<Lectures> findLecturesByCourse(){
-//        return lEJB.findByCourseName(lecture.getCourse());
-//    }
+
+    public LectureMB() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Courses getCourse() {
+        return course;
+    }
+
+    public void setCourse(Courses course) {
+        this.course = course;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getStopTime() {
+        return stopTime;
+    }
+
+    public void setStopTime(Date stopTime) {
+        this.stopTime = stopTime;
+    }
+
+    public Employees getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Employees teacher) {
+        this.teacher = teacher;
+    }
+
+    public List<Lectures> getLectures() {
+        return lectures;
+    }
+
+    public void setLectures(List<Lectures> lectures) {
+        this.lectures = lectures;
+    }
+
+    public List<Lectures> getAttendance() {
+        return attendance;
+    }
+
+    public void setAttendance(List<Lectures> attendance) {
+        this.attendance = attendance;
+    }
+
+    public List<Courses> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Courses> courses) {
+        this.courses = courses;
+    }
 }

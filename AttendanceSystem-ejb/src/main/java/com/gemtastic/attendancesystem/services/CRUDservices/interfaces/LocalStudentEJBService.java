@@ -15,5 +15,5 @@ import javax.ejb.Local;
  */
 @Local
 public interface LocalStudentEJBService extends CRUDService<Students> {
-    
+
 }

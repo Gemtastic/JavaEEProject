@@ -20,7 +20,7 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class CourseEJBService implements LocalCourseEJBService {
 
-    @PersistenceContext(unitName = "com.gemtastic_AttendanceSystem-ejb_ejb_1.0.1PU")
+    @PersistenceContext
     private EntityManager em;
     
     /**

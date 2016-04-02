@@ -1,0 +1,72 @@
+/* 
+    Created on : Feb 6, 2016, 8:40:12 PM
+    Author     : Gemtastic
+*/
+
+ul.menu, ul.menu ul {
+  list-style-type:none;
+  margin: 0;
+  padding: 0;
+  text-align:center;
+  line-height:2em;
+  color: #ffffff;
+}
+ul.menu li {
+  display: inline-block;
+  position: relative;
+  float:left;
+  width:7em;
+}
+li.menu {
+}
+
+ul.menu ul{
+  display:none;
+  list-style: none;
+  position: absolute;
+  min-width: 5em;
+  margin: 0;
+  padding: 0;
+}
+
+ul.menu ul li ul {
+  min-width: 7em;
+  display: none;
+}
+
+ul.menu li:hover ul {
+  display: block;
+  background-color: #333333;
+}
+
+ul.menu li:hover ul ul {
+  display:none;
+}
+
+ul.menu li li:hover ul {
+  display: block;
+  margin-top: -2em;
+  margin-left: 7em;
+  background-color: #333333;
+}
+
+ul.menu li:hover {
+  box-shadow: inset 0 0em 1em 0.1em rgba(229,229,229,0.5);
+}
+
+li.menu a {
+  display: block;
+  color: #f1f1f1;
+  text-decoration: none;
+  line-height: 3em;
+}
+
+#nav {
+    margin: 0 auto;
+    position: relative;
+    width: 60em;
+}
+
+.ui-widget {
+    font-size: 1em;
+}

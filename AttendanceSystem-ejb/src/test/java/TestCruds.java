@@ -108,8 +108,8 @@ public class TestCruds {
 
             Users user = new Users();
             user.setEmail("test@test.com");
-            user.setEmployee(employee);
-            user.setPassword("test");
+//            user.setEmployee(employee);
+//            user.setPassword("test");
             user.setType(ut);
             user.setUsername("test");
 

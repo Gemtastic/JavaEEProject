@@ -40,6 +40,7 @@ public class LectureEJBService implements LocalLectureEJBService {
         return result;
     }
     
+    @Override
     public List<Lectures> findByDate(LocalDate date){
         List<Lectures> lectures =  em.createNamedQuery("Lectures.findByDate", Lectures.class)
                                 .setParameter("date", Date.valueOf(date))
@@ -47,6 +48,7 @@ public class LectureEJBService implements LocalLectureEJBService {
         return lectures;
     }
     
+    @Override
     public List<Lectures> findByCourseName(Courses course) {
         Courses result = em.createNamedQuery("Courses.findByName", Courses.class)
                             .setParameter("name", course.getName())
@@ -54,6 +56,7 @@ public class LectureEJBService implements LocalLectureEJBService {
         return result.getLecturesList();
     }
     
+    @Override
     public List<Lectures> findByTeacher(Employees employee){
         List<Lectures> lectures = new ArrayList<>();
         List<Courses> result = em.find(Employees.class, employee.getId()).getCoursesList();

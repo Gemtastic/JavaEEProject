@@ -45,6 +45,7 @@
             <groupId>com.gemtastic</groupId>
             <artifactId>AttendanceSystem-ejb</artifactId>
             <version>1.0.1</version>
+            <scope>provided</scope>
             <type>ejb</type>
         </dependency>
         <dependency>

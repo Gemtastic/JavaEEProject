@@ -5,6 +5,7 @@
  */
 package com.gemtastic.attendancesystem.sessionbeans;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -16,6 +17,12 @@ import javax.faces.bean.SessionScoped;
 @ManagedBean(name="login")
 public class loginbean {
     private boolean loggedIn;
+    
+    
+    @PostConstruct
+    public void init(){
+        loggedIn = true;
+    }
     
     public void logIn(boolean logIn){
         loggedIn = logIn;

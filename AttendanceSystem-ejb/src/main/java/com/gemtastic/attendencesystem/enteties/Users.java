@@ -6,6 +6,7 @@
 package com.gemtastic.attendencesystem.enteties;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,9 +35,12 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
     @NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
     @NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
-    @NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password"),
+    @NamedQuery(name = "Users.findByFailedlogins", query = "SELECT u FROM Users u WHERE u.failedlogins = :failedlogins"),
+    @NamedQuery(name = "Users.findByLastfail", query = "SELECT u FROM Users u WHERE u.lastfail = :lastfail"),
+    @NamedQuery(name = "Users.findByLastlogin", query = "SELECT u FROM Users u WHERE u.lastlogin = :lastlogin"),
     @NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email")})
 public class Users implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,18 +54,20 @@ public class Users implements Serializable {
     private String username;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "password")
-    private String password;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Column(name = "failedlogins")
+    private int failedlogins;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
+    @Column(name = "lastfail")
+    @Temporal(TemporalType.DATE)
+    private Date lastfail;
+    @Column(name = "lastlogin")
+    @Temporal(TemporalType.DATE)
+    private Date lastlogin;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 2147483647)
     @Column(name = "email")
     private String email;
-    @JoinColumn(name = "employee", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Employees employee;
     @JoinColumn(name = "type", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private UserTypes type;
@@ -71,11 +79,11 @@ public class Users implements Serializable {
         this.id = id;
     }
 
-    public Users(Integer id, String username, String password, String email) {
+    public Users(Integer id, String username, int failedlogins, Date lastfail) {
         this.id = id;
         this.username = username;
-        this.password = password;
-        this.email = email;
+        this.failedlogins = failedlogins;
+        this.lastfail = lastfail;
     }
 
     public Integer getId() {
@@ -94,12 +102,28 @@ public class Users implements Serializable {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public int getFailedlogins() {
+        return failedlogins;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFailedlogins(int failedlogins) {
+        this.failedlogins = failedlogins;
+    }
+
+    public Date getLastfail() {
+        return lastfail;
+    }
+
+    public void setLastfail(Date lastfail) {
+        this.lastfail = lastfail;
+    }
+
+    public Date getLastlogin() {
+        return lastlogin;
+    }
+
+    public void setLastlogin(Date lastlogin) {
+        this.lastlogin = lastlogin;
     }
 
     public String getEmail() {
@@ -108,14 +132,6 @@ public class Users implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Employees getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employees employee) {
-        this.employee = employee;
     }
 
     public UserTypes getType() {

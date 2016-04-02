@@ -1,0 +1,33 @@
+<ui:composition template="../../template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="content">
+        <h:form>
+            <h1>Attendance for #{courses.course.name}</h1>
+            <p>
+                <strong>Lecture Date:</strong> #{converter.convertDateToString(courses.lecture.date)}<br/>
+                <strong>Lecture Start Time:</strong> #{converter.convertDateToTime(courses.lecture.start)}<br/>
+                <strong>Lecture Stop Time:</strong> #{converter.convertDateToTime(courses.lecture.stop)}
+            </p>
+            <p:dataTable var="s" rowIndexVar="loop" value="#{courses.att}">
+                <p:column headerText="Firstname">
+                    <h:outputText value=" #{s.student.firstname}" />
+                </p:column>
+                <p:column headerText="Lastname">
+                    <h:outputText value=" #{s.student.lastname}" />
+                </p:column>
+                <p:column headerText="Social Security Number">
+                    <h:outputText value=" #{s.student.socSecNo}" />
+                </p:column>
+                <p:column headerText="Present" rendered="#{courses.course.studentsList.size() gt 0}">
+                    <h:selectBooleanCheckbox value="#{s.attending}" />
+                </p:column>
+            </p:dataTable>
+            <p>
+                <p:commandButton value="Submit attendance" ajax="false" actionListener="#{courses.submitAttendance}" />
+            </p>
+        </h:form>
+    </ui:define>
+</ui:composition>

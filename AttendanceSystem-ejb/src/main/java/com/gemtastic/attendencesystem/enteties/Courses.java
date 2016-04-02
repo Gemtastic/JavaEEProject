@@ -45,6 +45,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Courses.findByStart", query = "SELECT c FROM Courses c WHERE c.start = :start"),
     @NamedQuery(name = "Courses.findByStop", query = "SELECT c FROM Courses c WHERE c.stop = :stop")})
 public class Courses implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

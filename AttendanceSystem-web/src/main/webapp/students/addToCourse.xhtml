@@ -1,0 +1,31 @@
+<ui:composition template="../template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:define name="content">
+        <h:form>
+            <p>
+                <p:outputLabel for="students" value="Student to add:" /><br/>
+                <p:selectOneMenu id="students" value="#{student.student}" converter="#{studentConverter}">
+                    <f:selectItems value="#{student.students}" var="s" itemValue="#{s}" itemLabel="#{s.firstname} #{s.lastname} (#{s.socSecNo})" />
+                </p:selectOneMenu>
+            </p>
+            <p:commandButton value="Add to course" action="#{student.addToCourse(courses.course)}"/>
+        </h:form>
+        
+        <p>
+            <p:dataTable var="s" value="#{courses.course.studentsList}">
+                <p:column headerText="Firstname">
+                    <h:outputText value=" #{s.firstname}" />
+                </p:column>
+                <p:column headerText="Lastname">
+                    <h:outputText value=" #{s.lastname}" />
+                </p:column>
+                <p:column headerText="Social Security Number">
+                    <h:outputText value=" #{s.socSecNo}" />
+                </p:column>
+            </p:dataTable>
+        </p>
+    </ui:define>
+</ui:composition>

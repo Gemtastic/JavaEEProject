@@ -32,7 +32,7 @@ public class EmployeeEJBService implements LocalEmployeeEJBService {
      */
     @Override
     public Employees readOne(Employees employee) {
-        Employees result = em.find(Employees.class, employee);
+        Employees result = em.find(Employees.class, employee.getId());
         return result;
     }
 
