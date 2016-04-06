@@ -30,8 +30,8 @@ public class UserTypeEJBService implements LocalUserTypeEJBService {
      * @return UserTypes
      */
     @Override
-    public UserTypes readOne(UserTypes type) {
-        UserTypes result = em.find(UserTypes.class, type.getId());
+    public UserTypes readOne(int id) {
+        UserTypes result = em.find(UserTypes.class, id);
         return result;
     }
 

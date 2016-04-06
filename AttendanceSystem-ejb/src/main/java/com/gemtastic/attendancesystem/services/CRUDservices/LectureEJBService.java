@@ -31,12 +31,12 @@ public class LectureEJBService implements LocalLectureEJBService {
     /**
      * Finds one lecture based on id and returns it or null.
      * 
-     * @param lecture
+     * @param id
      * @return Lectures
      */
     @Override
-    public Lectures readOne(Lectures lecture) {
-        Lectures result = em.find(Lectures.class, lecture.getId());
+    public Lectures readOne(int id) {
+        Lectures result = em.find(Lectures.class, id);
         return result;
     }
     

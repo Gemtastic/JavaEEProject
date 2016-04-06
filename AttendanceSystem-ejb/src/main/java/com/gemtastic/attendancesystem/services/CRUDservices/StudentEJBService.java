@@ -39,12 +39,12 @@ public class StudentEJBService implements LocalStudentEJBService {
     /**
      * Finds one student and returns it or null if the student doesn't exist.
      * 
-     * @param student
+     * @param id
      * @return Students
      */
     @Override
-    public Students readOne(Students student) {
-        Students result = em.find(Students.class, student.getId());
+    public Students readOne(int id) {
+        Students result = em.find(Students.class, id);
         return result;
     }
 

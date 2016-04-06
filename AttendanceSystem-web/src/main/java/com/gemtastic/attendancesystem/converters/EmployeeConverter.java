@@ -26,9 +26,7 @@ public class EmployeeConverter implements Converter{
     
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
-        Employees e = new Employees();
-        e.setId(Integer.valueOf(value));
-        Employees employee = ejb.readOne(e);
+        Employees employee = ejb.readOne(Integer.valueOf(value));
         return employee;
     }
 

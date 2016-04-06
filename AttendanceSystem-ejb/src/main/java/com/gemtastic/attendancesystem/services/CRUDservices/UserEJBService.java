@@ -26,12 +26,12 @@ public class UserEJBService implements LocalUserEJBService {
     /**
      * Finds the user of the given object by id and returns it or null.
      * 
-     * @param user
+     * @param id
      * @return Users
      */
     @Override
-    public Users readOne(Users user) {
-        Users result = em.find(Users.class, user.getId());
+    public Users readOne(int id) {
+        Users result = em.find(Users.class, id);
         return result;
     }
 

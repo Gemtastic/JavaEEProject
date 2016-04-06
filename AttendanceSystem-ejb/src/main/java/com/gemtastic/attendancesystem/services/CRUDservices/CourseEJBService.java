@@ -8,6 +8,7 @@ package com.gemtastic.attendancesystem.services.CRUDservices;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import java.util.List;
+import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,12 +27,12 @@ public class CourseEJBService implements LocalCourseEJBService {
     /**
      * Finds one course by id and returns it or null if the course doesn't exist.
      * 
-     * @param course
+     * @param id
      * @return course
      */
     @Override
-    public Courses readOne(Courses course) {
-        Courses result = em.find(Courses.class, course.getId());
+    public Courses readOne(int id) {
+        Courses result = em.find(Courses.class, id);
         return result;
     }
 
@@ -53,7 +54,8 @@ public class CourseEJBService implements LocalCourseEJBService {
      */
     @Override
     public void delete(Courses course) {
-        em.remove(course);
+        Courses result = em.merge(course);
+        em.remove(result);
     }
 
     /**
@@ -69,4 +71,9 @@ public class CourseEJBService implements LocalCourseEJBService {
         return result;
     }
     
+    @PreDestroy
+    public void destruct() {
+        System.out.println("I'm about to be destroyed!");
+        em.close();
+    }
 }

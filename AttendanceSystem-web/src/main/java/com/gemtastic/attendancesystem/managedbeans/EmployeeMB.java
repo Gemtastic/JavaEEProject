@@ -33,7 +33,7 @@ public class EmployeeMB {
     }
     
     public Employees findTeacher(Employees teacher){
-        return eEJB.readOne(teacher);
+        return eEJB.readOne(teacher.getId());
     }
     
 }

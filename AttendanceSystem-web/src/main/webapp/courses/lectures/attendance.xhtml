@@ -5,13 +5,13 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <ui:define name="content">
         <h:form>
-            <h1>Attendance for #{courses.course.name}</h1>
+            <h1>Attendance for #{attendances.course.name}</h1>
             <p>
-                <strong>Lecture Date:</strong> #{converter.convertDateToString(courses.lecture.date)}<br/>
-                <strong>Lecture Start Time:</strong> #{converter.convertDateToTime(courses.lecture.start)}<br/>
-                <strong>Lecture Stop Time:</strong> #{converter.convertDateToTime(courses.lecture.stop)}
+                <strong>Lecture Date:</strong> #{converter.convertDateToString(attendances.lecture.date)}<br/>
+                <strong>Lecture Start Time:</strong> #{converter.convertDateToTime(attendances.lecture.start)}<br/>
+                <strong>Lecture Stop Time:</strong> #{converter.convertDateToTime(attendances.lecture.stop)}
             </p>
-            <p:dataTable var="s" rowIndexVar="loop" value="#{courses.att}">
+            <p:dataTable var="s" rowIndexVar="loop" value="#{attendances.att}">
                 <p:column headerText="Firstname">
                     <h:outputText value=" #{s.student.firstname}" />
                 </p:column>
@@ -21,12 +21,12 @@
                 <p:column headerText="Social Security Number">
                     <h:outputText value=" #{s.student.socSecNo}" />
                 </p:column>
-                <p:column headerText="Present" rendered="#{courses.course.studentsList.size() gt 0}">
+                <p:column headerText="Present" rendered="#{attendances.course.studentsList.size() gt 0}">
                     <h:selectBooleanCheckbox value="#{s.attending}" />
                 </p:column>
             </p:dataTable>
             <p>
-                <p:commandButton value="Submit attendance" ajax="false" actionListener="#{courses.submitAttendance}" />
+                <p:commandButton value="Submit attendances" ajax="false" actionListener="#{attendances.submitAttendance}" />
             </p>
         </h:form>
     </ui:define>

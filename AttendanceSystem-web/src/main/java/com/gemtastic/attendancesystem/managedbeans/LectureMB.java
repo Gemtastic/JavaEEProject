@@ -7,11 +7,13 @@ import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Employees;
 import com.gemtastic.attendencesystem.enteties.Lectures;
 import com.gemtastic.attendencesystem.enteties.Students;
+import com.gemtastic.attendencesystem.helpenteties.Attendance;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -26,6 +28,9 @@ public class LectureMB {
     public Date startTime;
     public Date stopTime;
     public Employees teacher;
+    private Lectures lecture;
+    
+    private Attendance[] att;
     
     public void onCreate() {
         Lectures l = new Lectures();
@@ -40,6 +45,7 @@ public class LectureMB {
     public void init() {
         lectures = lEJB.findAll();
         courses = cEJB.findAll();
+        getLectureFromFlash();
     }
     
     @EJB
@@ -56,16 +62,12 @@ public class LectureMB {
     public List<Courses> courses;
     
     public List<Students> getStudentList(){
-        Lectures lecture = new Lectures();
-        lecture.setId(id);
-        Lectures l = lEJB.readOne(lecture);
+        Lectures l = lEJB.readOne(id);
         return l.getStudentsList();
     }
     
     public Lectures getLectureById(int id){
-        Lectures lecture = new Lectures();
-        lecture.setId(id);
-        Lectures l = lEJB.readOne(lecture);
+        Lectures l = lEJB.readOne(id);
         return l;
     }
 
@@ -142,5 +144,29 @@ public class LectureMB {
 
     public void setCourses(List<Courses> courses) {
         this.courses = courses;
+    }
+
+    public Lectures getLecture() {
+        return lecture;
+    }
+
+    public void setLecture(Lectures lecture) {
+        this.lecture = lecture;
+    }
+
+    public Attendance[] getAtt() {
+        return att;
+    }
+
+    public void setAtt(Attendance[] att) {
+        this.att = att;
+    }
+
+    private void getLectureFromFlash() {
+        try {
+            lecture = (Lectures) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("lecture");
+        } catch(Exception e) {
+            System.out.println("Exception when reading flash in lecture: " + e);
+        }
     }
 }

@@ -24,9 +24,7 @@ public class CourseConverter implements Converter {
     
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
-        Courses c = new Courses();
-        c.setId(Integer.valueOf(value));
-        Courses course = ejb.readOne(c);
+        Courses course = ejb.readOne(Integer.valueOf(value));
         return course;
     }
 

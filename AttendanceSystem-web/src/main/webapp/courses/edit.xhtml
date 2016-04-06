@@ -1,13 +1,13 @@
 <ui:composition template="../template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:define name="content">
         <h:form>
             <p:growl id="msgs" showDetail="true" />
 
-            <h2>Create a new Course</h2>
+            <h2>Edit course #{courses.course.name}</h2>
             <p>
                 <p:outputLabel for="name" value="Course name:" /> <br/>
                 <p:inputText id="name" value="#{courses.course.name}" required="true" requiredMessage="You must enter a name!">
@@ -37,10 +37,9 @@
                 </p:selectOneMenu>
             </p>
 
-            <h:commandButton value="Submit" action="#{courses.onSubmit}">
-                <f:setPropertyActionListener target="#{courses.course}" value="#{courses.course}" />
-            </h:commandButton>
-
+            <p:commandButton value="Submit" action="#{courses.editCourse}">
+                <f:param name="id" value="#{param.id}" />
+            </p:commandButton>
         </h:form>
     </ui:define>
-</ui:composition>
+</ui:composition>    

@@ -26,12 +26,12 @@ public class PositionEJBService implements LocalPositionEJBService {
     /**
      * Finds the given position and returns it or null.
      * 
-     * @param position
+     * @param id
      * @return Position
      */
     @Override
-    public Position readOne(Position position) {
-        Position result = em.find(Position.class, position);
+    public Position readOne(int id) {
+        Position result = em.find(Position.class, id);
         return result;
     }
 

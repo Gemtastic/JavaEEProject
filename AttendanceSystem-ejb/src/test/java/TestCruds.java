@@ -137,12 +137,12 @@ public class TestCruds {
 
             // Test find one
             Courses dbCourse = allCourses.get(0);
-            Courses result = cCRUD.readOne(dbCourse);
+            Courses result = cCRUD.readOne(dbCourse.getId());
             assertNotNull(result);
 
             //Test delete
             cCRUD.delete(result);
-            assertNull(cCRUD.readOne(result));
+            assertNull(cCRUD.readOne(result.getId()));
         }
     }
 }

@@ -13,15 +13,14 @@ import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Employees;
 import com.gemtastic.attendencesystem.enteties.Lectures;
 import com.gemtastic.attendencesystem.enteties.Students;
-import com.gemtastic.attendencesystem.helpenteties.Attendance;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
@@ -30,7 +29,7 @@ import javax.faces.event.ActionEvent;
  * @author Gemtastic
  */
 @ManagedBean(name="courses")
-@SessionScoped
+@RequestScoped
 public class CourseMB {
     
     @EJB
@@ -42,9 +41,10 @@ public class CourseMB {
     @EJB
     LocalAttendanceEJBService aEJB;
     
-    private Attendance[] att;
     
+    @ManagedProperty("#{param.id}")
     private int id;
+    
     private String name;
     private int points;
     private Date start;
@@ -54,63 +54,84 @@ public class CourseMB {
     private Lectures lecture;
     private List<Employees> teachers;
     private List<Courses> all;
+
     
     @PostConstruct
     public void init() {
         teachers = eEJB.findAll();
         all = cEJB.findAll();
+        System.out.println("You initialized a courses bean!");
+        System.out.println("Param: " + FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+//        System.out.println("Flash: " + FacesContext.getCurrentInstance()
+//                                                    .getExternalContext()
+//                                                    .getFlash().get("test"));
+        setUp();
     }
     
-    public void onSubmit(ActionEvent event){
-        System.out.println("You submitted it!");
-        teacher = new Employees();
-        teacher.setId(1);
-        course = new Courses();
-        course.setName(name);
-        course.setPoints(points);
-        course.setStart(start);
-        course.setStop(stop);
-        course.setTeacher(teacher);
-        System.out.println("Finished" + course);
+    private void setUp() {
+        try {
+            course = cEJB.readOne(id);
+        } catch(NullPointerException e) {
+            System.out.println("Parameter id is null. " + e);
+        } catch(Exception e) {
+            System.out.println("Could not catch the parameter id: " + e);
+        }
+    }
+    
+    public String onSubmit() {
+        System.out.println("It worked!");
+        System.out.println("Finished: " + course);
         Courses c = cEJB.upsert(course);
         System.out.println("upserted: " + c);
+        course = c;
+        return "course";
     }
     
-    public void submitAttendance(ActionEvent e) {
-        System.out.println("You submitted your attendance!");
-        System.out.println(Arrays.toString(att));
-        aEJB.saveAttendance(att);
-        // TODO: Implement a mapping between student and attendance
+    public String onSubmit(ActionEvent event) {
+        System.out.println("You submitted it!");
+        System.out.println("Finished: " + course);
+        Courses c = cEJB.upsert(course);
+        System.out.println("upserted: " + c);
+        course = c;
+        return "course";
     }
     
-    public void viewCourse(Courses c) throws IOException {
-        setCourse(c);
-        FacesContext.getCurrentInstance().getExternalContext()
-            .redirect("course.xhtml");
+    public String deleteCourse() {
+        System.out.println("You want to delete: " + id);
+        Courses placeholder = cEJB.readOne(id);
+        cEJB.delete(placeholder);
+        all = cEJB.findAll();
+        return "showCourses?faces-redirect=true";
     }
     
-    public void viewAttendance(Lectures l) throws IOException {
-        System.out.println("You're viewing the attendance! ");
-        att = new Attendance[course.getStudentsList().size()];
-
-        att = aEJB.getAttendance(l);
-        setLecture(l);
-        FacesContext.getCurrentInstance().getExternalContext()
-            .redirect("lectures/attendance.xhtml");
+    public String editCourse() {
+        System.out.println("Editable!");
+        System.out.println("id: " + id);
+        System.out.println("Course: " + course.getName());
+        cEJB.upsert(course);
+//        System.out.println("course: " + course.getName() + ", " + course.getPoints());
+        return "course?id=" + id + "&faces-redirect=true";
+    }
+    
+    // TODO useless
+    public String viewCourse(Courses c) {
+        System.out.println("You want to view the course: " + c);
+        course = c;
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("test", c);
+        return "course?faces-redirect=true";
     }
     
     public boolean attending(int id) {
-        Students s = new Students();
-        s.setId(id);
-        Students attend = sEJB.readOne(s);
+        Students attend = sEJB.readOne(id);
         List<Students> attending = lecture.getStudentsList();
         boolean b = attending.contains(attend);
         System.out.println("Result attending: " + b);
         return b;
     }
 
+    // TODO: useless
     public void addStudentToCourse() throws IOException{
-        System.out.println("Redirecting to tstudens...");
+        System.out.println("Redirecting to studens...");
         FacesContext.getCurrentInstance().getExternalContext()
             .redirect("../students/addToCourse.xhtml");
     }
@@ -197,13 +218,5 @@ public class CourseMB {
 
     public void setLecture(Lectures lecture) {
         this.lecture = lecture;
-    }
-
-    public Attendance[] getAtt() {
-        return att;
-    }
-
-    public void setAtt(Attendance[] att) {
-        this.att = att;
     }
 }

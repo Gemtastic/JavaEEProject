@@ -25,9 +25,7 @@ public class StudentConverter implements Converter{
     
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
-        Students s = new Students();
-        s.setId(Integer.valueOf(value));
-        Students student = ejb.readOne(s);
+        Students student = ejb.readOne(Integer.valueOf(value));
         return student;
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface CRUDService<T> {
     
-    public T readOne(T t);
+    public T readOne(int id);
     
     public List<T> findAll();
     

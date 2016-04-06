@@ -27,12 +27,12 @@ public class EmployeeEJBService implements LocalEmployeeEJBService {
     /**
      * Finds the given employee by id and returns it or null.
      * 
-     * @param employee
+     * @param id
      * @return 
      */
     @Override
-    public Employees readOne(Employees employee) {
-        Employees result = em.find(Employees.class, employee.getId());
+    public Employees readOne(int id) {
+        Employees result = em.find(Employees.class, id);
         return result;
     }
 

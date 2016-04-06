@@ -40,6 +40,12 @@ public class AttendanceEJBService implements LocalAttendanceEJBService {
         return attending;
     } 
     
+    /**
+     * Takes a lecture and returns an Attendance array.
+     * 
+     * @param lecture
+     * @return 
+     */
     public Attendance[] convertToAttencanceArray(Lectures lecture) {
         Courses course = lecture.getCourse();
         
@@ -57,11 +63,18 @@ public class AttendanceEJBService implements LocalAttendanceEJBService {
         return attendance;
     }
     
+    /**
+     * Takes a lecture and returns an array of Attendance
+     * or null.
+     * 
+     * @param lecture
+     * @return 
+     */
     @Override
     public Attendance[] getAttendance(Lectures lecture) {
         Lectures l;
         try {
-            l = lEJB.readOne(lecture);
+            l = lEJB.readOne(lecture.getId());
             return convertToAttencanceArray(l);
         } catch (Exception e) {
             System.out.println("Could not find lecture: " + e);
@@ -70,6 +83,12 @@ public class AttendanceEJBService implements LocalAttendanceEJBService {
         return null;
     }
 
+    /**
+     * Saves the given attendance in the database.
+     * 
+     * @param attendance
+     * @return 
+     */
     @Override
     public boolean saveAttendance(Attendance[] attendance) {
         
@@ -80,7 +99,7 @@ public class AttendanceEJBService implements LocalAttendanceEJBService {
             lecture.setStudentsList(attending);
             lEJB.upsert(lecture);
         } catch(Exception e) {
-            System.out.println("The upset of attendance on lecture failed: " + e.getMessage());
+            System.out.println("The upsert of attendance on lecture failed: " + e);
             return false;
         }
         
