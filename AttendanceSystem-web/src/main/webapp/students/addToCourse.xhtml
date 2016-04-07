@@ -11,11 +11,13 @@
                     <f:selectItems value="#{student.students}" var="s" itemValue="#{s}" itemLabel="#{s.firstname} #{s.lastname} (#{s.socSecNo})" />
                 </p:selectOneMenu>
             </p>
-            <p:commandButton value="Add to course" action="#{student.addToCourse(courses.course)}"/>
+            <p:commandButton value="Add to course" action="#{student.addToCourse}">
+                <f:param name="id" value="#{param.id}" />
+            </p:commandButton>
         </h:form>
         
         <p>
-            <p:dataTable var="s" value="#{courses.course.studentsList}">
+            <p:dataTable var="s" value="#{student.course.studentsList}">
                 <p:column headerText="Firstname">
                     <h:outputText value=" #{s.firstname}" />
                 </p:column>

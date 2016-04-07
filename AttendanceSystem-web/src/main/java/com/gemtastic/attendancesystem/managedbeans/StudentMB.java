@@ -11,9 +11,9 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -21,7 +21,7 @@ import org.primefaces.model.UploadedFile;
  * @author Gemtastic
  */
 @ManagedBean(name = "student")
-@ViewScoped
+@RequestScoped
 public class StudentMB {
     
     @EJB
@@ -30,6 +30,10 @@ public class StudentMB {
     @EJB
     LocalCourseEJBService cEJB;
     
+    @ManagedProperty(value="#{param.id}")
+    private int courseId;
+    
+    private Courses course;
     public Date regdate;
     public String firstname;
     public String lastname;
@@ -45,13 +49,15 @@ public class StudentMB {
     public void init(){
         student = new Students();
         students = sEJB.findAll();
+        System.out.println("You initialized a student bean! course id is: " + courseId);
+        course = cEJB.readOne(courseId);
+        System.out.println("Course: " + course);
     }
 
     public StudentMB() {
     }
     
-    public void addToCourse(Courses course) {
-        //System.out.println("Course: " + course + ", Student: " + student);
+    public void addToCourse() {
         List<Students> list = course.getStudentsList();
         list.add(student);
         course.setStudentsList(list);
@@ -136,5 +142,20 @@ public class StudentMB {
     public void setStudents(List<Students> students) {
         this.students = students;
     }
-    
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+    public Courses getCourse() {
+        return course;
+    }
+
+    public void setCourse(Courses course) {
+        this.course = course;
+    }
 }
