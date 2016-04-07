@@ -37,10 +37,7 @@
                 </p:selectOneMenu>
             </p>
 
-            <h:commandButton value="Submit" action="#{courses.onSubmit}">
-                <f:setPropertyActionListener target="#{courses.course}" value="#{courses.course}" />
-            </h:commandButton>
-
+            <p:commandButton value="Submit" action="#{courses.onSubmit}" />
         </h:form>
     </ui:define>
 </ui:composition>

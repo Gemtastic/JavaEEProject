@@ -45,6 +45,9 @@ public class CourseMB {
     @ManagedProperty("#{param.id}")
     private int id;
     
+    @ManagedProperty("#{param.newCourse}")
+    private Courses newCourse;
+    
     private String name;
     private int points;
     private Date start;
@@ -60,12 +63,18 @@ public class CourseMB {
     public void init() {
         teachers = eEJB.findAll();
         all = cEJB.findAll();
+        if (course == null) {
+            course = new Courses();
+            System.out.println("You made a new course!");
+        }
         System.out.println("You initialized a courses bean!");
         System.out.println("Param: " + FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
 //        System.out.println("Flash: " + FacesContext.getCurrentInstance()
 //                                                    .getExternalContext()
 //                                                    .getFlash().get("test"));
-        setUp();
+        if (id != 0) {
+            setUp();
+        }
     }
     
     private void setUp() {
@@ -87,20 +96,10 @@ public class CourseMB {
         return "course";
     }
     
-    public String onSubmit(ActionEvent event) {
-        System.out.println("You submitted it!");
-        System.out.println("Finished: " + course);
-        Courses c = cEJB.upsert(course);
-        System.out.println("upserted: " + c);
-        course = c;
-        return "course";
-    }
-    
     public String deleteCourse() {
         System.out.println("You want to delete: " + id);
         Courses placeholder = cEJB.readOne(id);
         cEJB.delete(placeholder);
-        all = cEJB.findAll();
         return "showCourses?faces-redirect=true";
     }
     
@@ -109,7 +108,6 @@ public class CourseMB {
         System.out.println("id: " + id);
         System.out.println("Course: " + course.getName());
         cEJB.upsert(course);
-//        System.out.println("course: " + course.getName() + ", " + course.getPoints());
         return "course?id=" + id + "&faces-redirect=true";
     }
     
@@ -218,5 +216,13 @@ public class CourseMB {
 
     public void setLecture(Lectures lecture) {
         this.lecture = lecture;
+    }
+
+    public Courses getNewCourse() {
+        return newCourse;
+    }
+
+    public void setNewCourse(Courses newCourse) {
+        this.newCourse = newCourse;
     }
 }
