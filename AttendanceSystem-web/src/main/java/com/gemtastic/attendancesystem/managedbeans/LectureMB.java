@@ -13,6 +13,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 /**
@@ -20,7 +21,17 @@ import javax.faces.context.FacesContext;
  * @author Gemtastic
  */
 @ManagedBean(name="lecture")
+@RequestScoped
 public class LectureMB {
+    
+    @EJB
+    private LocalLectureEJBService lEJB;
+    
+    @EJB
+    private LocalStudentEJBService sEJB;
+    
+    @EJB
+    private LocalCourseEJBService cEJB;
     
     public int id;
     public Courses course;
@@ -29,6 +40,10 @@ public class LectureMB {
     public Date stopTime;
     public Employees teacher;
     private Lectures lecture;
+    
+    public List<Lectures> lectures;
+    public List<Lectures> attendance;
+    public List<Courses> courses;
     
     private Attendance[] att;
     
@@ -47,19 +62,6 @@ public class LectureMB {
         courses = cEJB.findAll();
         getLectureFromFlash();
     }
-    
-    @EJB
-    private LocalLectureEJBService lEJB;
-    
-    @EJB
-    private LocalStudentEJBService sEJB;
-    
-    @EJB
-    private LocalCourseEJBService cEJB;
-    
-    public List<Lectures> lectures;
-    public List<Lectures> attendance;
-    public List<Courses> courses;
     
     public List<Students> getStudentList(){
         Lectures l = lEJB.readOne(id);

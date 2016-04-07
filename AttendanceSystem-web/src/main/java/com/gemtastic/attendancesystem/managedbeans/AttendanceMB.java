@@ -67,6 +67,7 @@ public class AttendanceMB {
         aEJB.saveAttendance(att);
     }
     
+    // TODO useless
     public String viewAttendance(Lectures l) {
         System.out.println("You're viewing the attendance!");
         System.out.println("lecture: " + l);

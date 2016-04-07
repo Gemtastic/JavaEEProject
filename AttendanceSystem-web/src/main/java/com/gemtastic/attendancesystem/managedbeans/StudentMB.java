@@ -57,11 +57,16 @@ public class StudentMB {
     public StudentMB() {
     }
     
-    public void addToCourse() {
+    public String addToCourse() {
         List<Students> list = course.getStudentsList();
         list.add(student);
         course.setStudentsList(list);
         cEJB.upsert(course);
+        return "courses/course?id=" + course.getId();
+    }
+    
+    public List<Students> nonAttendingStudentsOnly() {
+        
     }
     
     public UploadedFile getFile() {
