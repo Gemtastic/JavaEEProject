@@ -7,12 +7,12 @@
         <h:form>
             <p>
                 <p:outputLabel for="students" value="Student to add:" /><br/>
-                <p:selectOneMenu id="students" value="#{student.student}" converter="#{studentConverter}">
+                <p:selectOneMenu id="students" value="#{student.student}" converter="#{studentConverter}" required="true" >
                     <f:selectItems value="#{student.unregistered}" var="s" itemValue="#{s}" itemLabel="#{s.firstname} #{s.lastname} (#{s.socSecNo})" />
                 </p:selectOneMenu>
             </p>
-            <p:commandButton value="Add to course" action="#{student.addToCourse}">
-                <f:param name="id" value="#{param.id}" />
+            <p:commandButton value="Add to course" action="#{student.addToCourse}" disabled="#{student.disabled}" >
+                <f:param name="id" value="#{param.id != null ? param.id : 1}" />
             </p:commandButton>
         </h:form>
         

@@ -5,6 +5,7 @@ import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCour
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Students;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,7 @@ public class StudentMB {
     public String email;
     public int phone;
     private UploadedFile file;
+    private boolean disabled = true;
     private List<Students> students;
     List<Students> unregistered;
     
@@ -49,6 +51,7 @@ public class StudentMB {
     
     @PostConstruct
     public void init(){
+        redirectOnNoParam();
         student = new Students();
         students = sEJB.findAll();
         System.out.println("You initialized a student bean! course id is: " + courseId);
@@ -62,12 +65,29 @@ public class StudentMB {
     public StudentMB() {
     }
     
+    public void redirectOnNoParam(){
+        String param = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        if(param == null) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("addToCourse.xhtml?id=0");
+            } catch(IOException e) {
+                System.out.println("Caught IO when redirecting addToCourse");
+            }
+        } else {
+            disabled = false;
+        }
+    }
+    
     public String addToCourse() {
-        List<Students> list = course.getStudentsList();
-        list.add(student);
-        course.setStudentsList(list);
-        cEJB.upsert(course);
-        return "/courses/course?id=" + course.getId();
+        if (course != null) {
+            List<Students> list = course.getStudentsList();
+            list.add(student);
+            course.setStudentsList(list);
+            cEJB.upsert(course);
+            return "/courses/course?id=" + course.getId();
+        } else {
+            return "addToCourse?id=0";
+        }
     }
     
     public List<Students> nonAttendingStudentsOnly() {
@@ -83,9 +103,10 @@ public class StudentMB {
         return unregistered;
     }
     
-    public void removeFromCourse() {
+    public String removeFromCourse() {
         System.out.println("Student id:" );
         // TODO: trigger this so we can delete this student
+        return "course?id=" + courseId;
     }
     
     public UploadedFile getFile() {
@@ -189,5 +210,13 @@ public class StudentMB {
 
     public void setUnregistered(List<Students> unregistered) {
         this.unregistered = unregistered;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }
