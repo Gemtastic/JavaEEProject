@@ -13,8 +13,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 
 /**
  *
@@ -33,6 +33,11 @@ public class LectureMB {
     @EJB
     private LocalCourseEJBService cEJB;
     
+    private Courses param;
+    
+    @ManagedProperty(value="#{param.id}")
+    private int paramId;
+    
     public int id;
     public Courses course;
     public Date date;
@@ -40,6 +45,7 @@ public class LectureMB {
     public Date stopTime;
     public Employees teacher;
     private Lectures lecture;
+    private boolean disabled;
     
     public List<Lectures> lectures;
     public List<Lectures> attendance;
@@ -47,20 +53,33 @@ public class LectureMB {
     
     private Attendance[] att;
     
-    public void onCreate() {
+    public String onCreate() {
+        System.out.println("You got to creation! " + course + ", " + param);
+        if(course == null && param != null) {
+            course = param;
+        }
         Lectures l = new Lectures();
         l.setCourse(course);
         l.setDate(date);
         l.setStart(startTime);
         l.setStop(stopTime);
         lEJB.upsert(l);
+        return "/courses/course?id=" + course.getId() + "faces-redirect=true";
     }
     
     @PostConstruct
     public void init() {
+        System.out.println("You initialized a Lecture bean! Id is: " + paramId);
         lectures = lEJB.findAll();
         courses = cEJB.findAll();
-        getLectureFromFlash();
+        if(paramId != 0) {
+            param = cEJB.readOne(paramId);
+            System.out.println("Param is: " + param);
+            disabled = true;
+        } else {
+            disabled = false;
+        }
+        System.out.println("Disabled: " + disabled);
     }
     
     public List<Students> getStudentList(){
@@ -164,11 +183,27 @@ public class LectureMB {
         this.att = att;
     }
 
-    private void getLectureFromFlash() {
-        try {
-            lecture = (Lectures) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("lecture");
-        } catch(Exception e) {
-            System.out.println("Exception when reading flash in lecture: " + e);
-        }
+    public Courses getParam() {
+        return param;
+    }
+
+    public void setParam(Courses param) {
+        this.param = param;
+    }
+
+    public int getParamId() {
+        return paramId;
+    }
+
+    public void setParamId(int paramId) {
+        this.paramId = paramId;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }

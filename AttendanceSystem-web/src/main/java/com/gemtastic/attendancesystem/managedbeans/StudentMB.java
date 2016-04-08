@@ -81,9 +81,9 @@ public class StudentMB {
             list.add(student);
             course.setStudentsList(list);
             cEJB.upsert(course);
-            return "/courses/course?id=" + course.getId();
+            return "/courses/course?id=" + course.getId() + "&faces-redirect=true";
         } else {
-            return "addToCourse?id=0";
+            return "addToCourse?id=0&faces-redirect=true";
         }
     }
     

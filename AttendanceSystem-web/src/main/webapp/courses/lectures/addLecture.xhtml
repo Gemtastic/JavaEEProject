@@ -9,7 +9,8 @@
         <h:form>
             <p>
                 <p:outputLabel for="courses" value="Select course:" /><br/>
-                <p:selectOneMenu id="courses" value="#{lecture.course}" style="width:125px" converter="#{courseConverter}">
+                <p:selectOneMenu id="courses" value="#{lecture.course}" style="width:200px" converter="#{courseConverter}" disabled="#{lecture.disabled}">
+                    <f:selectItem itemLabel="#{lecture.param.name != null ? lecture.param.name : 'select a course...'}" itemValue="#{lecture.param != null ? lecture.param : lecture.courses.get(0)}" itemDisabled="#{!lecture.disabled}" />
                     <f:selectItems value="#{lecture.courses}" var="vari" itemValue="#{vari}" itemLabel="#{vari.name}" />
                 </p:selectOneMenu>
             </p>
@@ -29,7 +30,9 @@
                 <p:calendar id="stop" value="#{lecture.stopTime}" pattern="HH:mm" timeOnly="true" required="true" requiredMessage="You must enter a stop time!" />
             </p>
             
-            <p:commandButton value="Submit" ajax="false" actionListener="#{lecture.onCreate}" />
+            <p:commandButton value="Submit" ajax="false" actionListener="#{lecture.onCreate}">
+                <f:param name="id" value="#{param.id != null ? param.id : 0}" />
+            </p:commandButton>
         </h:form>
     </ui:define>
 </ui:composition>
