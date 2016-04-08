@@ -1,6 +1,5 @@
 package com.gemtastic.attendancesystem.managedbeans;
 
-//import com.gemtastic.attendancesystem.services.CRUDservices.StudentEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
@@ -35,6 +34,9 @@ public class StudentMB {
     @ManagedProperty(value="#{param.id}")
     private int courseId;
     
+    @ManagedProperty(value="#{param.student}")
+    private int studentId;
+    
     private Courses course;
     public Date regdate;
     public String firstname;
@@ -51,7 +53,7 @@ public class StudentMB {
     
     @PostConstruct
     public void init(){
-        redirectOnNoParam();
+        disableButtonOnNoParam();
         student = new Students();
         students = sEJB.findAll();
         System.out.println("You initialized a student bean! course id is: " + courseId);
@@ -65,20 +67,15 @@ public class StudentMB {
     public StudentMB() {
     }
     
-    public void redirectOnNoParam(){
+    public void disableButtonOnNoParam(){
         String param = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        if(param == null) {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("addToCourse.xhtml?id=0");
-            } catch(IOException e) {
-                System.out.println("Caught IO when redirecting addToCourse");
-            }
-        } else {
+        if(param != null) {
             disabled = false;
         }
     }
     
     public String addToCourse() {
+        System.out.println("You got here!");
         if (course != null) {
             List<Students> list = course.getStudentsList();
             list.add(student);
@@ -104,9 +101,13 @@ public class StudentMB {
     }
     
     public String removeFromCourse() {
-        System.out.println("Student id:" );
-        // TODO: trigger this so we can delete this student
-        return "course?id=" + courseId;
+        System.out.println("Student id:" + studentId);
+        Students toRemove = sEJB.readOne(studentId);
+        List<Students> attending = course.getStudentsList();
+        attending.remove(toRemove);
+        course.setStudentsList(attending);
+        course = cEJB.upsert(course);
+        return "course.xhtml?id=" + courseId + "&faces-redirect=true";
     }
     
     public UploadedFile getFile() {
@@ -218,5 +219,13 @@ public class StudentMB {
 
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 }
