@@ -31,10 +31,15 @@
                     <p:outputLabel value="#{converter.convertDateToTime(l.stop)}" />
                 </p:column>
             </p:dataTable>
+            <br/>
+            <p:button value="Add Lecture" outcome="lectures/addLecture.xhtml?id=#{courses.course.id}" />
             <h3>Students</h3>
             <p:dataTable var="s" value="#{courses.course.studentsList}">
                 <p:column headerText="Name">
                     <p:outputLabel value="#{s.firstname} #{s.lastname}" />
+                </p:column>
+                <p:column>
+                    <h:commandButton value="remove" action="#{student.removeFromCourse}" />
                 </p:column>
             </p:dataTable>
             <br />

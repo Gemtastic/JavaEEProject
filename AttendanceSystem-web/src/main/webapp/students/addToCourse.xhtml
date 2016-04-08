@@ -8,7 +8,7 @@
             <p>
                 <p:outputLabel for="students" value="Student to add:" /><br/>
                 <p:selectOneMenu id="students" value="#{student.student}" converter="#{studentConverter}">
-                    <f:selectItems value="#{student.students}" var="s" itemValue="#{s}" itemLabel="#{s.firstname} #{s.lastname} (#{s.socSecNo})" />
+                    <f:selectItems value="#{student.unregistered}" var="s" itemValue="#{s}" itemLabel="#{s.firstname} #{s.lastname} (#{s.socSecNo})" />
                 </p:selectOneMenu>
             </p>
             <p:commandButton value="Add to course" action="#{student.addToCourse}">

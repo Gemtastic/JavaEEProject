@@ -5,6 +5,7 @@ import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCour
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Students;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -42,6 +43,7 @@ public class StudentMB {
     public int phone;
     private UploadedFile file;
     private List<Students> students;
+    List<Students> unregistered;
     
     public Students student;
     
@@ -52,6 +54,9 @@ public class StudentMB {
         System.out.println("You initialized a student bean! course id is: " + courseId);
         course = cEJB.readOne(courseId);
         System.out.println("Course: " + course);
+        if (course != null) {
+            nonAttendingStudentsOnly();
+        }
     }
 
     public StudentMB() {
@@ -62,11 +67,25 @@ public class StudentMB {
         list.add(student);
         course.setStudentsList(list);
         cEJB.upsert(course);
-        return "courses/course?id=" + course.getId();
+        return "/courses/course?id=" + course.getId();
     }
     
     public List<Students> nonAttendingStudentsOnly() {
+        List<Students> attending = course.getStudentsList();
+        unregistered = new ArrayList<>();
         
+        for(Students s : students) {
+            boolean attend = attending.contains(s);
+            if (!attend) {
+                unregistered.add(s);
+            }
+        }
+        return unregistered;
+    }
+    
+    public void removeFromCourse() {
+        System.out.println("Student id:" );
+        // TODO: trigger this so we can delete this student
     }
     
     public UploadedFile getFile() {
@@ -162,5 +181,13 @@ public class StudentMB {
 
     public void setCourse(Courses course) {
         this.course = course;
+    }
+
+    public List<Students> getUnregistered() {
+        return unregistered;
+    }
+
+    public void setUnregistered(List<Students> unregistered) {
+        this.unregistered = unregistered;
     }
 }
