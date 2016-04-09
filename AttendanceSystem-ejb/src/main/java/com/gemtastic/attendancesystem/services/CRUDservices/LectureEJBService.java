@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -89,7 +90,13 @@ public class LectureEJBService implements LocalLectureEJBService {
      */
     @Override
     public void delete(Lectures lecture) {
-        em.remove(lecture);
+        Lectures toRemove = em.find(Lectures.class, lecture.getId());
+        Courses course = toRemove.getCourse();
+        List<Lectures> lectures =  course.getLecturesList();
+        lectures.remove(toRemove);
+        course.setLecturesList(lectures);
+        em.merge(course);
+        em.remove(toRemove);
     }
 
     /**
@@ -102,6 +109,16 @@ public class LectureEJBService implements LocalLectureEJBService {
     @Override
     public Lectures upsert(Lectures lecture) {
         Lectures result = em.merge(lecture);
+        Courses course = em.find(Courses.class, lecture.getCourse().getId());
+        course.getLecturesList().add(result);
+        System.out.println("course lectures:" + course.getLecturesList().size());
+        em.merge(course);
         return result;
+    }
+    
+    @PreDestroy
+    public void destruct() {
+        System.out.println("I'm about to be destroyed!");
+        em.close();
     }
 }

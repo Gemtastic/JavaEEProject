@@ -80,6 +80,7 @@ public class CourseMB {
     private void setUp() {
         try {
             course = cEJB.readOne(id);
+            System.out.println("Lecture size: " + course.getLecturesList().size());
         } catch(NullPointerException e) {
             System.out.println("Parameter id is null. " + e);
         } catch(Exception e) {

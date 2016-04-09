@@ -98,4 +98,12 @@ public class AttendanceMB {
     public void setCourse(Courses course) {
         this.course = course;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

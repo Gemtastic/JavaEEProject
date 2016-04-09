@@ -38,6 +38,9 @@ public class LectureMB {
     @ManagedProperty(value="#{param.id}")
     private int paramId;
     
+    @ManagedProperty(value="#{param.delete}")
+    private int lectureId;
+    
     public int id;
     public Courses course;
     public Date date;
@@ -63,8 +66,10 @@ public class LectureMB {
         l.setDate(date);
         l.setStart(startTime);
         l.setStop(stopTime);
-        lEJB.upsert(l);
-        return "/courses/course?id=" + course.getId() + "faces-redirect=true";
+        lecture = lEJB.upsert(l);
+        System.out.println("lecture: " + lecture);
+        String path = "/courses/course?faces-redirect=true&id=" + course.getId();
+        return path;
     }
     
     @PostConstruct
@@ -80,6 +85,14 @@ public class LectureMB {
             disabled = false;
         }
         System.out.println("Disabled: " + disabled);
+    }
+    
+    public String deleteLecture(){
+        System.out.println("You want to delete: " + lectureId);
+        Lectures placeholder = new Lectures();
+        placeholder.setId(lectureId);
+        lEJB.delete(placeholder);
+        return "course?id=" + paramId + "&faces-redirect=true";
     }
     
     public List<Students> getStudentList(){
@@ -205,5 +218,13 @@ public class LectureMB {
 
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
+    }
+
+    public int getLectureId() {
+        return lectureId;
+    }
+
+    public void setLectureId(int lectureId) {
+        this.lectureId = lectureId;
     }
 }

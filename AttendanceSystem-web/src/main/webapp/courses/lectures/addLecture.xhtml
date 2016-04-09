@@ -30,7 +30,7 @@
                 <p:calendar id="stop" value="#{lecture.stopTime}" pattern="HH:mm" timeOnly="true" required="true" requiredMessage="You must enter a stop time!" />
             </p>
             
-            <p:commandButton value="Submit" ajax="false" actionListener="#{lecture.onCreate}">
+            <p:commandButton value="Submit" ajax="false" action="#{lecture.onCreate}">
                 <f:param name="id" value="#{param.id != null ? param.id : 0}" />
             </p:commandButton>
         </h:form>

@@ -7,7 +7,6 @@ package com.gemtastic.attendancesystem.services.CRUDservices;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
-import com.gemtastic.attendencesystem.enteties.Lectures;
 import java.util.List;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
