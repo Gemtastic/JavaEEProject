@@ -19,7 +19,7 @@
             <h3>Lectures</h3>
             <p:dataTable var="l" value="#{courses.course.lecturesList}">
                 <p:column headerText="Name">
-                    <p:link value="View Attendance" outcome="lectures/attendance?id=#{l.id}"/>
+                    <p:link value="View Attendance" outcome="lectures/attendance?id=#{param.id}"/>
                 </p:column>
                 <p:column headerText="Date">
                     <p:outputLabel value="#{converter.convertDateToString(l.date)}" />
@@ -33,9 +33,9 @@
                 <p:column>
                     <p:commandButton value="Delete" ajax="false" action="#{lecture.deleteLecture}" >
                         <f:param name="id" value="#{param.id}" />
-                        <f:param name="delete" value="#{l.id}"  />
+                        <f:param name="lecture" value="#{l.id}"  />
                     </p:commandButton>
-                    <p:button value="Edit" outcome="lectures/editLecture.xhtml?id=#{l.id}" >
+                    <p:button value="Edit" outcome="lectures/editLecture.xhtml?lecture=#{l.id}&amp;id=#{l.id}" >
                         <f:param name="id" value="#{l.id}" />
                     </p:button>
                 </p:column>

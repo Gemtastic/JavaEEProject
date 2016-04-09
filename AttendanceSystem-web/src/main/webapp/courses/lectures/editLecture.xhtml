@@ -1,10 +1,37 @@
 <ui:composition template="../../template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:define name="content">
         <h:form>
-            hello!
+            <p>
+                <p:outputLabel for="courses" value="Select course:" /><br/>
+                <p:selectOneMenu id="courses" value="#{lecture.course}" style="width:200px" converter="#{courseConverter}" disabled="#{lecture.disabled}">
+                    <f:selectItem itemLabel="#{lecture.param.name != null ? lecture.param.name : 'select a course...'}" itemValue="#{lecture.param != null ? lecture.param : lecture.courses.get(0)}" itemDisabled="#{!lecture.disabled}" />
+                    <f:selectItems value="#{lecture.courses}" var="vari" itemValue="#{vari}" itemLabel="#{vari.name}" />
+                </p:selectOneMenu>
+            </p>
+                
+            <p>
+                <p:outputLabel for="date" value="Lecture date:" /><br/>
+                <p:calendar id="date" value="#{lecture.lecture.date}" pattern="dd-mm-yyyy" showWeek="true" required="true" requiredMessage="You must enter a date!" />
+            </p>
+
+            <p>
+                <p:outputLabel for="start" value="Lecture start time:" /><br/>
+                <p:calendar id="start" value="#{lecture.lecture.start}" pattern="HH:mm" timeOnly="true" required="true" requiredMessage="You must enter a start time!" />
+            </p>
+            
+            <p>
+                <p:outputLabel for="stop" value="Lecture stop time:" /><br/>
+                <p:calendar id="stop" value="#{lecture.lecture.stop}" pattern="HH:mm" timeOnly="true" required="true" requiredMessage="You must enter a stop time!" />
+            </p>
+            
+            <p:commandButton value="Save" ajax="false" action="#{lecture.updateLecture}">
+                <f:param name="id" value="#{param.id != null ? param.id : 0}" />
+                <f:param name="lecture" value="#{param.lecture != null ? param.lecture : 0}" />
+            </p:commandButton>
         </h:form>
     </ui:define>
 </ui:composition>

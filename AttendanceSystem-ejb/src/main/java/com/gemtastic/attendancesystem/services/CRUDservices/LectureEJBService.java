@@ -110,6 +110,11 @@ public class LectureEJBService implements LocalLectureEJBService {
     public Lectures upsert(Lectures lecture) {
         Lectures result = em.merge(lecture);
         Courses course = em.find(Courses.class, lecture.getCourse().getId());
+        List<Lectures> lectures = course.getLecturesList();
+        if(lectures.contains(lecture)) {
+            System.out.println("Contained the lecture");
+            course.getLecturesList().remove(lecture);
+        } 
         course.getLecturesList().add(result);
         System.out.println("course lectures:" + course.getLecturesList().size());
         em.merge(course);

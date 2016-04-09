@@ -38,7 +38,7 @@ public class LectureMB {
     @ManagedProperty(value="#{param.id}")
     private int paramId;
     
-    @ManagedProperty(value="#{param.delete}")
+    @ManagedProperty(value="#{param.lecture}")
     private int lectureId;
     
     public int id;
@@ -58,6 +58,22 @@ public class LectureMB {
     
     public String onCreate() {
         System.out.println("You got to creation! " + course + ", " + param);
+        Lectures l = setLecture();
+        lecture = lEJB.upsert(l);
+        System.out.println("lecture: " + lecture);
+        String path = "/courses/course?faces-redirect=true&id=" + course.getId();
+        return path;
+    }
+    
+    public String updateLecture() {
+        System.out.println("You want to update the lecture! " + course + ", " + lecture);
+        
+        Lectures result = lEJB.upsert(lecture);
+        System.out.println("result: " + result);
+        return "/courses/course?faces-redirect=true&id=" + lecture.getCourse().getId();
+    }
+    
+    public Lectures setLecture() {
         if(course == null && param != null) {
             course = param;
         }
@@ -66,15 +82,12 @@ public class LectureMB {
         l.setDate(date);
         l.setStart(startTime);
         l.setStop(stopTime);
-        lecture = lEJB.upsert(l);
-        System.out.println("lecture: " + lecture);
-        String path = "/courses/course?faces-redirect=true&id=" + course.getId();
-        return path;
+        return l;
     }
     
     @PostConstruct
     public void init() {
-        System.out.println("You initialized a Lecture bean! Id is: " + paramId);
+        System.out.println("You initialized a Lecture bean! Id is: " + paramId + ", " + lectureId);
         lectures = lEJB.findAll();
         courses = cEJB.findAll();
         if(paramId != 0) {
@@ -83,6 +96,12 @@ public class LectureMB {
             disabled = true;
         } else {
             disabled = false;
+        }
+        if(lectureId != 0) {
+            lecture = lEJB.readOne(lectureId);
+            date = date != null ? date : lecture.getDate();
+            startTime = startTime!= null ? startTime : lecture.getStart();
+            stopTime = stopTime != null ? stopTime : lecture.getStop();
         }
         System.out.println("Disabled: " + disabled);
     }
