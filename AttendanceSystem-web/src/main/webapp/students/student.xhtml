@@ -1,0 +1,45 @@
+<ui:composition template="../template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <h:form id="studentForm">
+            <p>
+                <h2>Student</h2>
+                <p:panel>
+                    <h:panelGrid id="grid" columns="2" cellpadding="5">
+                        <strong>First name:</strong>
+                        <p:outputLabel value="#{student.student.firstname}" />
+
+                        <strong>Last name:</strong>
+                        <p:outputLabel value="#{student.student.lastname}" />
+
+                        <strong>Enrollment date:</strong>
+                        <p:outputLabel value="#{converter.convertDateToString(student.student.regDate)}" />
+
+                        <strong>Email:</strong>
+                        <p:outputLabel value="#{student.student.email}" />
+                    </h:panelGrid>
+                </p:panel>
+            </p>
+
+            <h2>Attendance</h2>
+            <ui:repeat value="#{student.student.coursesList}" var="cour" >
+                <p>
+                    <strong>Course: </strong><p:link styleClass="link" value="#{cour.name}" outcome="/courses/course?id=#{cour.id}" style="text-decoration: none; color: #333333" />
+                    <br />
+                    <strong>Attendance: </strong><p:outputLabel value="#{attendances.attendanceStats(cour, student.student)}%" />
+                </p>
+                <p:dataTable value="#{cour.lecturesList}" var="lect" >
+                    <p:column headerText="Lecture date">
+                        <p:outputLabel value="#{converter.convertDateToString(lect.date)}" />
+                    </p:column>
+                    <p:column headerText="Attended">
+                        <p:outputLabel value="#{attendances.attended(lect, student.student)}" />
+                    </p:column>
+                </p:dataTable>
+            </ui:repeat>
+        </h:form>
+    </ui:define>
+</ui:composition>

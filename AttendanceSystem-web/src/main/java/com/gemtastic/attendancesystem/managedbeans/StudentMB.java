@@ -3,6 +3,7 @@ package com.gemtastic.attendancesystem.managedbeans;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
+import com.gemtastic.attendencesystem.enteties.Lectures;
 import com.gemtastic.attendencesystem.enteties.Students;
 import java.io.IOException;
 import java.sql.Time;
@@ -59,7 +60,7 @@ public class StudentMB {
     @PostConstruct
     public void init(){
         disableButtonOnNoParam();
-        student = new Students();
+        student = sEJB.readOne(studentId);
         students = sEJB.findAll();
         years = new ArrayList<>();
         for(int i = Year.now().getValue(); i >= 1969; i--) {

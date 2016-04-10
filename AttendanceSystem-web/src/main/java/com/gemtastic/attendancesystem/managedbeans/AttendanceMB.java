@@ -9,6 +9,7 @@ import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalLect
 import com.gemtastic.attendancesystem.services.interfaces.LocalAttendanceEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Lectures;
+import com.gemtastic.attendencesystem.enteties.Students;
 import com.gemtastic.attendencesystem.helpenteties.Attendance;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
@@ -23,17 +24,17 @@ import javax.faces.event.ActionEvent;
  *
  * @author Gemtastic
  */
-@ManagedBean(name="attendances")
+@ManagedBean(name = "attendances")
 @RequestScoped
 public class AttendanceMB {
-    
+
     private Attendance[] att;
     private Lectures lecture;
     private Courses course;
-    
+
     @ManagedProperty("#{param.id}")
     private int id;
-    
+
     @EJB
     LocalAttendanceEJBService aEJB;
     @EJB
@@ -41,32 +42,32 @@ public class AttendanceMB {
 
     public AttendanceMB() {
     }
-    
+
     @PostConstruct
     public void init() {
         System.out.println("You initialized an attendance bean!");
         System.out.println("Param: " + FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-        if(id != 0) {
+        if (id != 0) {
             Lectures l = lEJB.readOne(id);
             setUp(l);
         }
     }
-    
+
     public void setUp(Lectures lecture) {
         course = lecture.getCourse();
         this.lecture = lecture;
-        if(course != null) {
+        if (course != null) {
             att = new Attendance[course.getStudentsList().size()];
             att = aEJB.getAttendance(lecture);
         }
     }
-    
+
     public void submitAttendance(ActionEvent e) {
         System.out.println("You submitted your attendance!");
         System.out.println(Arrays.toString(att));
         aEJB.saveAttendance(att);
     }
-    
+
     // TODO useless
     public String viewAttendance(Lectures l) {
         System.out.println("You're viewing the attendance!");
@@ -74,7 +75,29 @@ public class AttendanceMB {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("lecture", l);
         return "lectures/attendance?faces-redirect=true";
     }
-    
+
+    public String attended(Lectures lecture, Students student) {
+        String answer = student.getLecturesList().contains(lecture) ? "Yes" : "No";
+        return answer;
+    }
+
+    public double attendanceStats(Courses course, Students student) {
+        double percentage = 0.0;
+        int attendances = 0;
+
+        for (Lectures l : course.getLecturesList()) {
+            if (l.getStudentsList().contains(student)) {
+                attendances++;
+                System.out.println("Arttended: " + attendances);
+            }
+        }
+
+        if (attendances != 0) {
+            percentage = (double) attendances / (double) course.getLecturesList().size() * 100;
+        }
+        return percentage;
+    }
+
     public Attendance[] getAtt() {
         return att;
     }
