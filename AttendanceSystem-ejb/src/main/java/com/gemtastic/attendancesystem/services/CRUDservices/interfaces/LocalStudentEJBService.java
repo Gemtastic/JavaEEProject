@@ -7,6 +7,7 @@ package com.gemtastic.attendancesystem.services.CRUDservices.interfaces;
 
 import com.gemtastic.attendancesystem.services.interfaces.CRUDService;
 import com.gemtastic.attendencesystem.enteties.Students;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -15,5 +16,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface LocalStudentEJBService extends CRUDService<Students> {
+
+    public List<Students> findByEnrollmentYear(int enrollYear);
 
 }

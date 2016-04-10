@@ -7,6 +7,9 @@ package com.gemtastic.attendancesystem.services.CRUDservices;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendencesystem.enteties.Students;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -68,6 +71,15 @@ public class StudentEJBService implements LocalStudentEJBService {
     @Override
     public Students upsert(Students student) {
         Students result = em.merge(student);
+        return result;
+    }
+
+    @Override
+    public List<Students> findByEnrollmentYear(int enrollYear) {
+        List<Students> result = em.createQuery("SELECT s FROM Students s WHERE s.regDate BETWEEN :startDate AND :endDate")
+                .setParameter("startDate", Date.valueOf(LocalDate.of(enrollYear, Month.JANUARY, 01)))
+                .setParameter("endDate", Date.valueOf(LocalDate.of(enrollYear, Month.DECEMBER, 31)))
+                .getResultList();
         return result;
     }
     

@@ -1,0 +1,29 @@
+<ui:composition template="../template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <h:form id="studentForm">
+            <p:panel id="panel">
+                <h:panelGrid id="grid" columns="2" cellpadding="5">
+                    <p:outputLabel for="year" value="Select year of enrollment:" />
+                    <p:selectOneMenu id="year" value="#{student.enrollYear}">
+                        <p:ajax listener="#{student.onYearSelect}" update="table" />
+                        <f:selectItem itemLabel="Select year" itemValue="" noSelectionOption="true" />
+                        <f:selectItems value="#{student.years}" var="y" itemLabel="#{y}" itemValue="#{y}" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                
+                <p:dataTable id="table" var="stud" value="#{student.students}">
+                    <p:column headerText="Name">
+                        <p:outputLabel value="#{stud.firstname} #{stud.lastname}" />
+                    </p:column>
+                    <p:column headerText="Enrollment date">
+                        <p:outputLabel value="#{converter.convertDateToString(stud.regDate)}" />
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>

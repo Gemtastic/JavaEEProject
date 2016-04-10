@@ -5,7 +5,10 @@ import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStud
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Students;
 import java.io.IOException;
+import java.sql.Time;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -37,6 +40,7 @@ public class StudentMB {
     @ManagedProperty(value="#{param.student}")
     private int studentId;
     
+    private int enrollYear;
     private Courses course;
     public Date regdate;
     public String firstname;
@@ -47,7 +51,8 @@ public class StudentMB {
     private UploadedFile file;
     private boolean disabled = true;
     private List<Students> students;
-    List<Students> unregistered;
+    private List<Students> unregistered;
+    private List<Integer> years;
     
     public Students student;
     
@@ -56,6 +61,10 @@ public class StudentMB {
         disableButtonOnNoParam();
         student = new Students();
         students = sEJB.findAll();
+        years = new ArrayList<>();
+        for(int i = Year.now().getValue(); i >= 1969; i--) {
+            years.add(i);
+        }
         System.out.println("You initialized a student bean! course id is: " + courseId);
         course = cEJB.readOne(courseId);
         System.out.println("Course: " + course);
@@ -65,6 +74,17 @@ public class StudentMB {
     }
 
     public StudentMB() {
+    }
+    
+    public void onYearSelect() {
+        System.out.println("Year was selected: " + enrollYear);
+        students = sEJB.findByEnrollmentYear(enrollYear);
+        if(students != null) {
+            System.out.println("Student count: " + students.size());
+        } else {
+            System.out.println("Students list is null");
+        }
+        
     }
     
     public void disableButtonOnNoParam(){
@@ -227,5 +247,21 @@ public class StudentMB {
 
     public void setStudentId(int studentId) {
         this.studentId = studentId;
+    }
+
+    public int getEnrollYear() {
+        return enrollYear;
+    }
+
+    public void setEnrollYear(int enrollYear) {
+        this.enrollYear = enrollYear;
+    }
+
+    public List<Integer> getYears() {
+        return years;
+    }
+
+    public void setYears(List<Integer> years) {
+        this.years = years;
     }
 }
