@@ -26,7 +26,10 @@
                 </p:column>
             </p:dataTable>
             <p>
-                <p:commandButton value="Submit attendances" ajax="false" actionListener="#{attendances.submitAttendance}" />
+                <p:commandButton value="Submit attendances" ajax="false" action="#{attendances.submitAttendance(attendances.att)}">
+                    <f:param name="id" value="#{param.id}" />
+                </p:commandButton>
+                <p:button value="Back to course" outcome="/courses/course?id=#{attendances.course.id}" />
             </p>
         </h:form>
     </ui:define>

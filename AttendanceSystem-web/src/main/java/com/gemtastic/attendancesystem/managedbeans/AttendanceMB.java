@@ -18,7 +18,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 
 /**
  *
@@ -45,11 +44,13 @@ public class AttendanceMB {
 
     @PostConstruct
     public void init() {
-        System.out.println("You initialized an attendance bean!");
+        System.out.println("You initialized an attendance bean! " + id);
         System.out.println("Param: " + FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         if (id != 0) {
             Lectures l = lEJB.readOne(id);
-            setUp(l);
+            if(l != null){
+                setUp(l);
+            }
         }
     }
 
@@ -62,10 +63,11 @@ public class AttendanceMB {
         }
     }
 
-    public void submitAttendance(ActionEvent e) {
-        System.out.println("You submitted your attendance!");
-        System.out.println(Arrays.toString(att));
-        aEJB.saveAttendance(att);
+    public String submitAttendance(Attendance[] attending) {
+        System.out.println("You submitted your attendance!" + id + ", " + course);
+        System.out.println(Arrays.toString(attending));
+        aEJB.saveAttendance(attending);
+        return "/courses/course?faces-redirect=true&id=" + course.getId();
     }
 
     // TODO useless

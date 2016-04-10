@@ -3,14 +3,11 @@ package com.gemtastic.attendancesystem.managedbeans;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
-import com.gemtastic.attendencesystem.enteties.Lectures;
 import com.gemtastic.attendencesystem.enteties.Students;
-import java.io.IOException;
-import java.sql.Time;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -85,7 +82,18 @@ public class StudentMB {
         } else {
             System.out.println("Students list is null");
         }
-        
+    }
+    
+    public String createStudent(){
+        student = new Students();
+        student.setEmail(email);
+        student.setFirstname(firstname);
+        student.setLastname(lastname);
+        student.setPhone(phone);
+        student.setRegDate(Date.valueOf(LocalDate.now()));
+        student.setSocSecNo(socialSecurityNo);
+        sEJB.upsert(student);
+        return "students?faces-redirect=true";
     }
     
     public void disableButtonOnNoParam(){
@@ -93,6 +101,12 @@ public class StudentMB {
         if(param != null) {
             disabled = false;
         }
+    }
+    
+    public String deleteStudent() {
+        System.out.println("You want to delete student: " + student);
+        sEJB.delete(student);
+        return "students?faces-redirect=true";
     }
     
     public String addToCourse() {

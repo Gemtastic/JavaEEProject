@@ -6,6 +6,8 @@
 package com.gemtastic.attendancesystem.services.CRUDservices;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
+import com.gemtastic.attendencesystem.enteties.Courses;
+import com.gemtastic.attendencesystem.enteties.Lectures;
 import com.gemtastic.attendencesystem.enteties.Students;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -58,7 +60,15 @@ public class StudentEJBService implements LocalStudentEJBService {
      */
     @Override
     public void delete(Students student) {
-        em.remove(student);
+        Students toRemove = em.find(Students.class, student.getId());
+        for(Courses c : toRemove.getCoursesList()) {
+            c.getStudentsList().remove(toRemove);
+        }
+        for(Lectures l : toRemove.getLecturesList()){
+            l.getStudentsList().remove(toRemove);
+        }
+        em.merge(toRemove);
+        em.remove(toRemove);
     }
 
     /**

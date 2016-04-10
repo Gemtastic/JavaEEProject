@@ -8,8 +8,8 @@
             <h1>#{courses.course.name}</h1>
             <strong>Points:</strong> #{courses.course.points} <br/>
             <strong>Teacher in charge:</strong> #{courses.course.teacher.firstname} #{courses.course.teacher.lastname}<br/>
-            <strong>Start Date:</strong> #{converter.convertDateToString(courses.course.start)}<br/>
-            <strong>Stop Date:</strong> #{converter.convertDateToString(courses.course.stop)}<br/>
+            <strong>Start Date:</strong> #{courses.course.start != null? converter.convertDateToString(courses.course.start) : ''}<br/>
+            <strong>Stop Date:</strong> #{courses.course.stop != null? converter.convertDateToString(courses.course.stop) : ''}<br/>
             <br/>
             <p:commandButton value="Delete course" ajax="false" action="#{courses.deleteCourse}">
                 <f:param name="id" value="#{param.id}" />
@@ -19,7 +19,7 @@
             <h3>Lectures</h3>
             <p:dataTable var="l" value="#{courses.course.lecturesList}">
                 <p:column headerText="Name">
-                    <p:link value="View Attendance" outcome="lectures/attendance?id=#{param.id}"/>
+                    <p:link value="View Attendance" outcome="lectures/attendance?id=#{l.id}"/>
                 </p:column>
                 <p:column headerText="Date">
                     <p:outputLabel value="#{converter.convertDateToString(l.date)}" />
@@ -46,7 +46,10 @@
             <h3>Students</h3>
             <p:dataTable var="s" value="#{courses.course.studentsList}">
                 <p:column headerText="Name">
-                    <p:outputLabel value="#{s.firstname} #{s.lastname}" />
+                    <p:link value="#{s.firstname} #{s.lastname}" outcome="/students/student?student=#{s.id}" />
+                </p:column>
+                <p:column headerText="Attendance rate">
+                    #{attendances.attendanceStats(courses.course, s)}%
                 </p:column>
                 <p:column>
                     <p:commandButton value="Remove from course" ajax="false" action="#{student.removeFromCourse}" >

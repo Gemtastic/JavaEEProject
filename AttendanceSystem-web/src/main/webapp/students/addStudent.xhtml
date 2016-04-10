@@ -32,7 +32,7 @@
                 <p:growl id="messages" showDetail="true" />
                 <p:fileUpload id="image" value="#{student.file}" mode="simple" fileLimit="1" allowTypes="*.jpg;*.png;*.gif;" /><br/>
                 <br/>
-                <p:commandButton value="Submit" ajax="false" actionListener="#{student.onSubmit}" />
+                <p:commandButton value="Submit" ajax="false" action="#{student.createStudent}" />
             </h:form>
         </div>
     </ui:define>
