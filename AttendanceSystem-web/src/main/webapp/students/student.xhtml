@@ -23,9 +23,12 @@
                     </h:panelGrid>
                 </p:panel>
             </p>
+            
             <p:commandButton value="Delete Student" ajax="false" action="#{student.deleteStudent}">
                 <f:param name="student" value="#{student.student.id}" />
             </p:commandButton>
+            <p:button value="Edit Student" outcome="editStudent?student=#{student.student.id}" />
+            
             <h2>Attendance</h2>
             <ui:repeat value="#{student.student.coursesList}" var="cour" >
                 <p>

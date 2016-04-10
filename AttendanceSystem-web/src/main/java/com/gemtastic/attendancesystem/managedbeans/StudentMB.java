@@ -84,6 +84,12 @@ public class StudentMB {
         }
     }
     
+    public String editStudent() {
+        System.out.println("You want to edit student: " + studentId + ", " + student.getFirstname());
+        sEJB.upsert(student);
+        return "student?faces-redirect=true&student=" + studentId;
+    }
+    
     public String createStudent(){
         student = new Students();
         student.setEmail(email);
