@@ -46,7 +46,7 @@ public class AttendanceEJBService implements LocalAttendanceEJBService {
      * @param lecture
      * @return 
      */
-    public Attendance[] convertToAttencanceArray(Lectures lecture) {
+    public Attendance[] convertToAttendanceArray(Lectures lecture) {
         Courses course = lecture.getCourse();
         
         List<Students> attending = lecture.getStudentsList();
@@ -75,7 +75,7 @@ public class AttendanceEJBService implements LocalAttendanceEJBService {
         Lectures l;
         try {
             l = lEJB.readOne(lecture.getId());
-            return convertToAttencanceArray(l);
+            return convertToAttendanceArray(l);
         } catch (Exception e) {
             System.out.println("Could not find lecture: " + e);
         }
