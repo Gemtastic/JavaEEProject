@@ -9,10 +9,12 @@ import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCour
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalLectureEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendancesystem.services.interfaces.LocalAttendanceEJBService;
+import com.gemtastic.attendancesystem.sessionbeans.StatisticsBean;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Lectures;
 import com.gemtastic.attendencesystem.enteties.Students;
 import com.gemtastic.attendencesystem.helpenteties.Attendance;
+import com.gemtastic.attendencesystem.helpenteties.Statistics;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -32,6 +34,9 @@ public class AttendanceMB {
     private Attendance[] att;
     private Lectures lecture;
     private Courses course;
+    
+    private Statistics stats;
+    private StatisticsBean statistics = new StatisticsBean();
 
     @ManagedProperty("#{param.id}")
     private int id;
@@ -90,23 +95,8 @@ public class AttendanceMB {
     }
 
     public double attendanceStats(Courses course, Students student) {
-        Students s = sEJB.readOne(student.getId());
-        Courses c = cEJB.readOne(course.getId());
-        
-        double percentage = 0.0;
-        int attendances = 0;
-
-        for (Lectures l : c.getLecturesList()) {
-            if (l.getStudentsList().contains(s)) {
-                attendances++;
-                System.out.println("Attended: " + attendances);
-            }
-        }
-
-        if (attendances != 0) {
-            percentage = (double) attendances / (double) c.getLecturesList().size() * 100;
-        }
-        return percentage;
+        stats = statistics.courseStatistics(course, student);
+        return stats.getAttendancePercent();
     }
 
     public Attendance[] getAtt() {
