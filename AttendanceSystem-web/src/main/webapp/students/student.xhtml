@@ -29,14 +29,13 @@
             </p:commandButton>
             <p:button value="Edit Student" outcome="editStudent?student=#{student.student.id}" />
             
-            <h2>Attendance</h2>
-            <p:chart type="line" model="#{statistics.overall}" style="height: 250px;" />
+            
             
             <ui:repeat value="#{student.student.coursesList}" var="cour" >
                 <p>
                     <strong>Course: </strong><p:link styleClass="link" value="#{cour.name}" outcome="/courses/course?id=#{cour.id}" style="text-decoration: none; color: #333333" />
                     <br />
-                    <strong>Attendance: </strong><p:outputLabel value="#{attendances.attendanceStats(cour, student.student)}%" />
+                    <strong>Attendance: </strong><p:outputLabel value="#{statistics.courseStatistics(cour, student.student).getAttendancePercent()}%" />
                 </p>
                 <p:dataTable value="#{cour.lecturesList}" var="lect" >
                     <p:column headerText="Lecture date">
@@ -47,6 +46,10 @@
                     </p:column>
                 </p:dataTable>
             </ui:repeat>
+            
+            <p:commandButton value="Get Attendance" ajax="false" action="#{statistics.fetchAllLectures}">
+                <f:param name="student" value="#{student.student.id}" />
+            </p:commandButton>
         </h:form>
     </ui:define>
 </ui:composition>

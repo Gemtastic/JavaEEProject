@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -23,11 +21,6 @@ public class AttendanceEJBService implements LocalAttendanceEJBService {
     @EJB
     LocalLectureEJBService lEJB;
     
-    @PersistenceContext
-    EntityManager em;
-    
-    
-    public int days
     
     /**
      * Sorts out a list of the attending students only. If no

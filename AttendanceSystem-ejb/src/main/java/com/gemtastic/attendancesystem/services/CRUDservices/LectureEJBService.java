@@ -9,9 +9,10 @@ import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalLect
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Employees;
 import com.gemtastic.attendencesystem.enteties.Lectures;
-import java.sql.Date;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
@@ -44,7 +45,7 @@ public class LectureEJBService implements LocalLectureEJBService {
     @Override
     public List<Lectures> findByDate(LocalDate date){
         List<Lectures> lectures =  em.createNamedQuery("Lectures.findByDate", Lectures.class)
-                                .setParameter("date", Date.valueOf(date))
+                                .setParameter("date", Date.from(Instant.ofEpochMilli(date.toEpochDay())))
                                 .getResultList();
         return lectures;
     }
@@ -125,5 +126,20 @@ public class LectureEJBService implements LocalLectureEJBService {
     public void destruct() {
         System.out.println("I'm about to be destroyed!");
         em.close();
+    }
+
+    @Override
+    public List<Lectures> findByStudentAndDate(int studentId, LocalDate startDate, LocalDate stopDate) {
+        System.out.println("Attempting query:");
+        List<Lectures> result = null;
+        
+        try {
+            System.out.println("Trying an SQL string: SELECT l.id, l.course, l.\"date\", l.\"start\", l.stop FROM Attendance a INNER JOIN Lectures l on lecture = l.id AND l.date BETWEEN '" + startDate + "' AND '"+ stopDate + "' AND student = " + String.valueOf(studentId) + ";");
+            result = em.createNativeQuery("SELECT l.id, l.course, l.\"date\", l.\"start\", l.stop FROM Attendance a INNER JOIN Lectures l on lecture = l.id AND l.date BETWEEN '" + startDate + "' AND '"+ stopDate + "' AND student = " + String.valueOf(studentId) + ";", Lectures.class).getResultList();
+            System.out.println("Result from string: " + result);
+        } catch (Exception e) {
+            System.out.println("Exception while finding by date and student: " + e);
+        }
+        return result;
     }
 }
