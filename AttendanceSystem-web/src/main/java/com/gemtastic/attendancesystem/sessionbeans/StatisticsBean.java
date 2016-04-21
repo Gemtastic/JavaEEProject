@@ -5,6 +5,7 @@
  */
 package com.gemtastic.attendancesystem.sessionbeans;
 
+import com.gemtastic.attendancesystem.converters.ConverterBean;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalLectureEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
@@ -17,11 +18,15 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.DateAxis;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
@@ -41,8 +46,9 @@ public class StatisticsBean {
     @EJB
     LocalCourseEJBService cEJB;
 
-    private Statistics stats;
+    ConverterBean converter = new ConverterBean();
 
+//    private Statistics stats;
 //    @ManagedProperty(value="param.course")
     private int courseId;
 
@@ -51,12 +57,24 @@ public class StatisticsBean {
 
     private LineChartModel overall;
 
+    private final Comparator lectureComparator = new Comparator<Lectures>() {
+        @Override
+        public int compare(Lectures toTheLeft, Lectures toTheRight) {
+            if (toTheLeft.getDate().getTime() > toTheRight.getDate().getTime()) {
+                return 1;
+            } else if (toTheLeft.getDate().getTime() == toTheRight.getDate().getTime()) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+    };
+
     @PostConstruct
     public void init() {
-//        drawOverallAttendance();
+        drawOverallAttendance();
     }
 
-    //TODO: this is where you stopped
     public int fetchLecturesAttendedByMonth(Date firstDayOfMonth) {
         System.out.println("About to get attendance.");
         List<Lectures> attendances = lEJB.findByStudentAndDate(studentId, LocalDate.of(2016, 01, 01), LocalDate.of(2016, 05, 30));
@@ -78,78 +96,193 @@ public class StatisticsBean {
 
     /**
      * Counts the attendance of a student in a given course.
-     * 
+     *
      * @param course
      * @param student
-     * @return 
+     * @return
      */
     private int attendancePerCourse(Courses course, Students student) {
         int attendance = 0;
         // Per course
-        for (int i = 0; i < course.getLecturesList().size(); i++) {
-            if (course.getLecturesList().get(i).getStudentsList().contains(student)) {
+        for (Lectures l : course.getLecturesList()) {
+            if (l.getStudentsList().contains(student)) {
                 attendance++;
             }
-            stats = courseStatistics(course, student);
         }
         return attendance;
     }
 
+    /**
+     * Compares a current map of "first" and "last" dates with the given
+     * course's dates and returns the dates that were the least and most 
+     * recent.
+     * @param current
+     * @param course
+     * @return 
+     */
+    private Map<String, Date> isMoreRecent(Map<String, Date> current, Courses course) {
+        Map<String, Date> dates = current;
+        
+        Date first = null;
+        Date last = null;
+
+        if (dates.isEmpty()) {
+            System.out.println("Dates is empty!");
+            first = course.getStart();
+            last = course.getStop();
+        } else {
+            if (course.getStart().compareTo(dates.get("first")) < 0) {
+                first = course.getStart();
+            } else {
+                first = dates.get("first");
+            }
+            if (course.getStop().compareTo(dates.get("last")) > 0) {
+                last = course.getStop();
+            } else {
+                last = dates.get("last");
+            }
+        }
+        dates.put("first", first);
+        dates.put("last", last);
+        System.out.println("First date: " + first + ", Last date: " + last);
+        return dates;
+    }
+    
+    /**
+     * Gets a HashMap with the first and last dates of the given 
+     * courses' start and stop dates.
+     * @param courses
+     * @return 
+     */
+    private Map<String, Date> getFirstAndLastDatesOfCourses(List<Courses> courses) {
+        
+        Map<String, Date> dates = new HashMap<>();
+        
+        for(Courses c : courses){
+            dates = isMoreRecent(dates, c);
+        }
+        
+        return dates;
+    }
+    
+    /**
+     * Sets up a LineChartSeries with the date and attendance.
+     * 
+     * @param student
+     * @return 
+     */
+    private LineChartSeries setUpLineChartSeries(Students student) {
+        LineChartSeries chart = new LineChartSeries();
+        
+        int attendance = 0;
+        for (Courses c : student.getCoursesList()) {
+            
+            List<Lectures> lectures = c.getLecturesList();
+            Collections.sort(lectures, lectureComparator);
+
+            for (Lectures l : lectures) {
+                if (l.getStudentsList().contains(student)) {
+                    attendance++;
+                    System.out.println("Date: " + converter.convertDateToString(l.getDate()) + ", Attendance: " + attendance);
+                    chart.set(converter.convertDateToString(l.getDate()), attendance);
+                }
+            }
+        }
+        return chart;
+    }
+    
+    private int totalLectureCount(List<Courses> courses) {
+        int total = 0;
+        
+        for(Courses c : courses) {
+            total += c.getLecturesList().size();
+        }
+        
+        return total;
+    }
+
+    /**
+     * Sets up a LineChartModel to display the student's attendance
+     * over time.
+     */
     private void drawOverallAttendance() {
         Students student = sEJB.readOne(studentId);
-        Courses course = cEJB.readOne(courseId);
-        LineChartModel model = new LineChartModel();
-        LineChartSeries courseAttendance = new LineChartSeries();
-        LineChartSeries overallAttendance = new LineChartSeries();
-        courseAttendance.setLabel("Over-all attendance:");
-        int y = 0;
+        overall = new LineChartModel();
+        
+        LineChartSeries overallAttendance = setUpLineChartSeries(student);
+        
+        overallAttendance.setLabel("Over-all attendance:");
+        
+        overall.addSeries(overallAttendance);
 
-        // TODO: implement get lectures for student by month
+        overall.setTitle("Attendance graph");
+        overall.setZoom(false);
+        overall.getAxis(AxisType.Y).setLabel("Attended lectures");
+        overall.getAxis(AxisType.Y).setMax(totalLectureCount(student.getCoursesList()));
+
+        DateAxis axis = new DateAxis("Dates");
+        axis.setTickAngle(-50);
+        
+        // Set the total course range of dates
+        Map<String, Date> dates = getFirstAndLastDatesOfCourses(student.getCoursesList());
+        Date first = dates.get("first");
+        Date last = dates.get("last");
+        
+        axis.setMax(converter.convertDateToString(last));
+        axis.setMin(converter.convertDateToString(first));
+        axis.setTickFormat("%b %#d, %y");
+
+        overall.getAxes().put(AxisType.X, axis);
     }
 
-    // ???
-    private void getDayOfCourseSpan(Lectures lecture) {
-        long courseLength = stats.getCourseDays();
-    }
-
-    private void setupNumbers(Courses course) {
+    /**
+     * Calculates how many days a course spans.
+     *
+     * @param course
+     * @return
+     */
+    private int calculateCourseDays(Courses course) {
+        Statistics newStat = new Statistics();
         long start = course.getStart().getTime();
         long stop = course.getStop().getTime();
 
         int days = (int) ((int) stop - (int) start);
 
-        stats.setCourseDays((days / (24 * 3600)) + 1);
+        return (days / (24 * 3600)) + 1;
     }
 
-    private void countDays(Courses course, Students student) {
-        Students s = sEJB.readOne(student.getId());
-        Courses c = cEJB.readOne(course.getId());
+    /**
+     * Calculates the attendance percentage.
+     *
+     * @param course
+     * @param student
+     * @return
+     */
+    private double attendancePercentage(int attendanceCount, int lectureCount) {
 
-        double percentage;
-        int attendances = 0;
+        double percentage = 0.0;
 
-        for (Lectures l : c.getLecturesList()) {
-            if (l.getStudentsList().contains(s)) {
-                attendances++;
-                System.out.println("Attended: " + attendances);
-            }
+        if (attendanceCount != 0 && lectureCount != 0) {
+            percentage = (double) attendanceCount / (double) lectureCount * 100;
         }
-
-        if (attendances != 0) {
-            percentage = (double) attendances / (double) c.getLecturesList().size() * 100;
-
-            stats.setAttendancePercent(percentage);
-            stats.setAttendingCount(attendances);
-        }
+        return percentage;
     }
 
+    /**
+     * Get a statistics object of the given student and course.
+     *
+     * @param course
+     * @param student
+     * @return
+     */
     public Statistics courseStatistics(Courses course, Students student) {
-        stats = new Statistics();
-        setupNumbers(course);
-        countDays(course, student);
-        stats.setLecturesCount(course.getLecturesList().size());
+        Statistics newStats = new Statistics();
+        newStats.setCourseDays(calculateCourseDays(course));
+        newStats.setAttendingCount(attendancePerCourse(course, student));
+        newStats.setAttendancePercent(attendancePercentage(newStats.getAttendingCount(), course.getLecturesList().size()));
+        newStats.setLecturesCount(course.getLecturesList().size());
 
-        return stats;
+        return newStats;
     }
 
     public StatisticsBean() {
@@ -161,14 +294,6 @@ public class StatisticsBean {
 
     public void setOverall(LineChartModel overall) {
         this.overall = overall;
-    }
-
-    public Statistics getStats() {
-        return stats;
-    }
-
-    public void setStats(Statistics stats) {
-        this.stats = stats;
     }
 
     public int getStudentId() {

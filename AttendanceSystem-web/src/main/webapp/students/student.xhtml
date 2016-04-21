@@ -29,7 +29,9 @@
             </p:commandButton>
             <p:button value="Edit Student" outcome="editStudent?student=#{student.student.id}" />
             
-            
+            <p>
+                <p:chart type="line" model="#{statistics.overall}" style="height:400px;"/>
+            </p>
             
             <ui:repeat value="#{student.student.coursesList}" var="cour" >
                 <p>
