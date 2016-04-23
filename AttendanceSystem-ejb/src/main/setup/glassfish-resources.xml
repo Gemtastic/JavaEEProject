@@ -11,4 +11,10 @@
         <property name="driverClass" value="org.postgresql.Driver"/>
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="jdbc/attendance" object-type="user" pool-name="post-gre-sql_attendance_appPool"/>
-    </resources>
+    
+    <admin-object-resource enabled="true" jndi-name="jms/myDestination"  res-type="javax.jms.Queue"  res-adapter="jmsra">
+        <property name="Name" value="PhysicalQueue"/>
+    </admin-object-resource>
+    <connector-connection-pool name="jms/myDestinationFactoryPool"  connection-definition-name="javax.jms.QueueConnectionFactory"  resource-adapter-name="jmsra"/>
+    <connector-resource enabled="true" jndi-name="jms/myDestinationFactory" pool-name="jms/myDestinationFactoryPool"  />
+</resources>
