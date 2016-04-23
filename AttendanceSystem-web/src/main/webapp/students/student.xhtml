@@ -48,10 +48,6 @@
                     </p:column>
                 </p:dataTable>
             </ui:repeat>
-            
-            <p:commandButton value="Get Attendance" ajax="false" action="#{statistics.fetchAllLectures}">
-                <f:param name="student" value="#{student.student.id}" />
-            </p:commandButton>
         </h:form>
     </ui:define>
 </ui:composition>
