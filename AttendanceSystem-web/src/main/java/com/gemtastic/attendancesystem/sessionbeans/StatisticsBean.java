@@ -57,6 +57,7 @@ public class StatisticsBean {
 
     private LineChartModel overall;
 
+    // A comparator for lectures
     private final Comparator lectureComparator = new Comparator<Lectures>() {
         @Override
         public int compare(Lectures toTheLeft, Lectures toTheRight) {
@@ -74,7 +75,12 @@ public class StatisticsBean {
     public void init() {
         drawOverallAttendance();
     }
-
+    
+    /**
+     * 
+     * @param firstDayOfMonth
+     * @return 
+     */
     public int fetchLecturesAttendedByMonth(Date firstDayOfMonth) {
         System.out.println("About to get attendance.");
         List<Lectures> attendances = lEJB.findByStudentAndDate(studentId, LocalDate.of(2016, 01, 01), LocalDate.of(2016, 05, 30));
