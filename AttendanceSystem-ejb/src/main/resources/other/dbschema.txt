@@ -86,7 +86,6 @@ create table groups (
         groupname text not null
 );
 
-
 create table message (
         id serial primary key not null,
         author text not null,
