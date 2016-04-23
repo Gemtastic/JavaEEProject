@@ -17,11 +17,18 @@ import com.gemtastic.attendencesystem.helpenteties.Attendance;
 import com.gemtastic.attendencesystem.helpenteties.Statistics;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.jms.JMSConnectionFactory;
+import javax.jms.JMSContext;
+import javax.jms.JMSRuntimeException;
+import javax.jms.Queue;
 
 /**
  *
@@ -31,6 +38,15 @@ import javax.faces.context.FacesContext;
 @RequestScoped
 public class AttendanceMB {
 
+    //JMS resources
+    @Resource(mappedName = "jms/myQueue")
+    private Queue myQueue;
+
+    @Inject
+    @JMSConnectionFactory("java:comp/DefaultJMSConnectionFactory")
+    private JMSContext context;
+    // end JMS resources
+    
     private Attendance[] att;
     private Lectures lecture;
     private Courses course;
@@ -78,8 +94,15 @@ public class AttendanceMB {
         System.out.println("You submitted your attendance!" + id + ", " + course);
         System.out.println(Arrays.toString(attending));
         aEJB.saveAttendance(attending);
+        
+        // attempting JMS implementation here
+        sendJMSMessageToMyQueue();
+        // End JMS
+        
         return "/courses/course?faces-redirect=true&id=" + course.getId();
     }
+    
+    
 
     // TODO useless
     public String viewAttendance(Lectures l) {
@@ -129,5 +152,18 @@ public class AttendanceMB {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    /**
+     * Sends a message to the message queue.
+     */
+    private void sendJMSMessageToMyQueue() {
+        System.out.println("About to send message!");
+        try {
+            String text = "Attendance was submitted for course " + course.getName() + " and lecture on the date " + lecture.getDate() + ".";
+            context.createProducer().send(myQueue, text);
+        } catch (JMSRuntimeException t) {
+            System.out.println(t.toString());
+        }
     }
 }
