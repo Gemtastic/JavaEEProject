@@ -8,18 +8,24 @@ package com.gemtastic.attendancesystem.managedbeans;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalLectureEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
+import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalUserEJBService;
 import com.gemtastic.attendancesystem.services.interfaces.LocalAttendanceEJBService;
+import com.gemtastic.attendancesystem.services.interfaces.LoginServices;
+import com.gemtastic.attendancesystem.sessionbeans.SessionBean;
 import com.gemtastic.attendancesystem.sessionbeans.StatisticsBean;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Lectures;
+import com.gemtastic.attendencesystem.enteties.Message;
 import com.gemtastic.attendencesystem.enteties.Students;
+import com.gemtastic.attendencesystem.enteties.Users;
 import com.gemtastic.attendencesystem.helpenteties.Attendance;
 import com.gemtastic.attendencesystem.helpenteties.Statistics;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
@@ -27,7 +33,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.jms.JMSConnectionFactory;
 import javax.jms.JMSContext;
+import javax.jms.JMSException;
 import javax.jms.JMSRuntimeException;
+import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 /**
@@ -47,6 +55,10 @@ public class AttendanceMB {
     private JMSContext context;
     // end JMS resources
     
+    @ManagedProperty(value="#{sessionBean}")
+    public SessionBean sessionBean;
+    
+    
     private Attendance[] att;
     private Lectures lecture;
     private Courses course;
@@ -58,6 +70,8 @@ public class AttendanceMB {
     private int id;
 
     @EJB
+    private LoginServices loginService;
+    @EJB
     LocalAttendanceEJBService aEJB;
     @EJB
     LocalLectureEJBService lEJB;
@@ -65,6 +79,8 @@ public class AttendanceMB {
     LocalStudentEJBService sEJB;
     @EJB
     LocalCourseEJBService cEJB;
+    @EJB
+    LocalUserEJBService uEJB;
 
     public AttendanceMB() {
     }
@@ -154,16 +170,33 @@ public class AttendanceMB {
         this.id = id;
     }
 
+    public SessionBean getSessionBean() {
+        return sessionBean;
+    }
+
+    public void setSessionBean(SessionBean sessionBean) {
+        this.sessionBean = sessionBean;
+    }
+
     /**
      * Sends a message to the message queue.
      */
     private void sendJMSMessageToMyQueue() {
         System.out.println("About to send message!");
+        Message msg = new Message();
         try {
-            String text = "Attendance was submitted for course " + course.getName() + " and lecture on the date " + lecture.getDate() + ".";
-            context.createProducer().send(myQueue, text);
+            String text = "Attendance was submitted for course " + course.getName() + " and lecture of the date " + lecture.getDate() + ".";
+            Users user = uEJB.findByUser(sessionBean.getUsername());
+            msg.setAuthor(user.getEmployee());
+            msg.setMessage(text);
+            ObjectMessage message = context.createObjectMessage();
+            message.setObject(msg);
+            
+            context.createProducer().send(myQueue, message);
         } catch (JMSRuntimeException t) {
             System.out.println(t.toString());
+        } catch (JMSException ex) {
+            Logger.getLogger(AttendanceMB.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -7,7 +7,7 @@
         </div>
         <div id="userhome">
             <ui:insert name="userhome">
-                <ui:include src="./userhome_NoUser.xhtml" />
+                <ui:include src="#{login.isLoggedIn() ? '../logged_in/loggedInUserHome.xhtml' : './userhome_NoUser.xhtml'}" />
             </ui:insert>
         </div>
 </ui:composition>

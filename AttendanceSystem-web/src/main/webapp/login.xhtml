@@ -1,0 +1,23 @@
+<ui:composition template="template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <h:form id="login">
+            <h1>Please log in!</h1>
+            <h:panelGrid columns="3" cellspacing="5">
+
+                    <p:outputLabel for="username" value="Username: " />
+                    <p:inputText id="username" value="#{login.username}" required="true" requiredMessage="You must enter a username" />
+                    <p:message for="username" display="text"/>
+
+                    <p:outputLabel for="password" value="Password: " />
+                    <p:inputText id="password" value="#{login.password}" required="true" requiredMessage="You must enter a password!" />
+                    <p:message for="password" display="text"/>
+
+            </h:panelGrid>
+            <p:commandButton value="Log in" action="#{login.logIn}" update="login" />
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.gemtastic.attendencesystem.enteties;
 
 import java.io.Serializable;
@@ -39,10 +44,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Students.findByRegDate", query = "SELECT s FROM Students s WHERE s.regDate = :regDate")})
 public class Students implements Serializable {
 
-    @Lob
-    @Column(name = "image")
-    private byte[] image;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,6 +77,9 @@ public class Students implements Serializable {
     @Column(name = "reg_date")
     @Temporal(TemporalType.DATE)
     private Date regDate;
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
     @ManyToMany(mappedBy = "studentsList")
     private List<Courses> coursesList;
     @ManyToMany(mappedBy = "studentsList")
@@ -153,6 +157,13 @@ public class Students implements Serializable {
         this.regDate = regDate;
     }
 
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
     @XmlTransient
     public List<Courses> getCoursesList() {
@@ -195,14 +206,6 @@ public class Students implements Serializable {
     @Override
     public String toString() {
         return "com.gemtastic.attendencesystem.enteties.Students[ id=" + id + " ]";
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
     }
     
 }

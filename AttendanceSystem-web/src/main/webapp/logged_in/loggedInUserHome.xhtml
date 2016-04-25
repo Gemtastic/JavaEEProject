@@ -1,0 +1,14 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:form>
+        <div id="messageWrapper">
+            <div id="message">You are logged in.!<br/>
+                <p:commandLink value="Log out" action="#{login.logOut()}" /><br/>
+                <p:link value="View Inbox" outcome="/admin/inbox.xhtml" rendered="#{sessionBean.usertype == 'admin'? true : false}" />
+            </div> 
+        </div>
+    </h:form>
+</ui:composition>

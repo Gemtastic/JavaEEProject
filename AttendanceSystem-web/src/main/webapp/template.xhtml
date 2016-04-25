@@ -20,7 +20,7 @@
             </div>
             <div id="menuWrapper">
                 <ui:insert name="menu">
-                    <ui:include src="#{login.loggedIn ? './logged_in/loggedInMenu.xhtml' : './default/notLoggedInMenu.xhtml'}" />
+                    <ui:include src="#{login.isLoggedIn() ? './logged_in/loggedInMenu.xhtml' : './default/notLoggedInMenu.xhtml'}" />
                 </ui:insert>
             </div>
             <div id="content">

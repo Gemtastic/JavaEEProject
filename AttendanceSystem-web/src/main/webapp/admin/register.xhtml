@@ -1,0 +1,36 @@
+<ui:composition template="../template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <h:form>
+            <h1>Register new user!</h1>
+            <p>
+                <p:outputLabel for="username" value="Username: " /><br/>
+                <p:inputText id="username" value="#{userMB.username}" required="true" requiredMessage="You must enter a username" />
+            </p>    
+            <p>
+                <p:outputLabel for="password" value="Password: " /><br/>
+                <p:inputText id="password" value="#{userMB.password}" required="true" requiredMessage="You must enter a password!" />
+            </p>
+            <p>
+                <p:outputLabel for="email" value="Email: " /><br/>
+                <p:inputText id="email" value="#{userMB.email}" required="true" requiredMessage="You must enter an email!" />
+            </p>
+            <p>
+                <p:outputLabel for="employee" value="Employee: " /><br/>
+                <p:selectOneMenu id="employee" value="#{userMB.employee}" style="width:125px" converter="#{employeeConverter}">
+                    <f:selectItems value="#{userMB.employees}" var="vari" itemValue="#{vari}" itemLabel="#{vari.firstname} #{vari.lastname}" />
+                </p:selectOneMenu><br/>
+            </p>
+            <p>
+                <p:outputLabel for="userType" value="User type: " /><br/>
+                <p:selectOneMenu id="userType" value="#{userMB.userType}" style="width:125px" converter="#{userTypeConverter}">
+                    <f:selectItems value="#{userMB.types}" var="vari" itemValue="#{vari}" itemLabel="#{vari.name}" />
+                </p:selectOneMenu><br/>
+            </p>
+            <p:commandButton value="Register" action="#{userMB.registerUser}" />
+        </h:form>
+    </ui:define>
+</ui:composition>

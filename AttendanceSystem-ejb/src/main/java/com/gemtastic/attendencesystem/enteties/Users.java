@@ -56,8 +56,6 @@ public class Users implements Serializable {
     @NotNull
     @Column(name = "failedlogins")
     private int failedlogins;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "lastfail")
     @Temporal(TemporalType.DATE)
     private Date lastfail;
@@ -68,6 +66,9 @@ public class Users implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "email")
     private String email;
+    @JoinColumn(name = "employee", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Employees employee;
     @JoinColumn(name = "type", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private UserTypes type;
@@ -79,11 +80,10 @@ public class Users implements Serializable {
         this.id = id;
     }
 
-    public Users(Integer id, String username, int failedlogins, Date lastfail) {
+    public Users(Integer id, String username, int failedlogins) {
         this.id = id;
         this.username = username;
         this.failedlogins = failedlogins;
-        this.lastfail = lastfail;
     }
 
     public Integer getId() {
@@ -132,6 +132,14 @@ public class Users implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Employees getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employees employee) {
+        this.employee = employee;
     }
 
     public UserTypes getType() {

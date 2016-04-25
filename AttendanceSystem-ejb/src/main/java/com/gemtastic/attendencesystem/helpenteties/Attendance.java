@@ -7,12 +7,15 @@ package com.gemtastic.attendencesystem.helpenteties;
 
 import com.gemtastic.attendencesystem.enteties.Lectures;
 import com.gemtastic.attendencesystem.enteties.Students;
+import java.io.Serializable;
 
 /**
  *
  * @author Gemtastic
  */
-public class Attendance {
+public class Attendance implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private Students student;
     private Lectures lecture;

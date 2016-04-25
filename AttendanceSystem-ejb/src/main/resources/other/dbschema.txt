@@ -50,9 +50,10 @@ create table users(
 	id serial primary key not null,
 	username text not null,
 	failedlogins integer not null,
-        lastFail date not null,
+        lastFail date,
         lastLogin date,
 	email text,
+        employee integer not null references employees,
 	type integer not null references user_types
 );
 
@@ -88,7 +89,7 @@ create table groups (
 
 create table message (
         id serial primary key not null,
-        author text not null,
+        author integer not null references employee,
         message text not null
 );
 
@@ -133,5 +134,8 @@ values ('Head', 'master', 'master@school.com', 1, '2015-08-01');
 insert into user_types (name)
 values ('admin');
 
-insert into users (username, password, email, type, employee)
-values ('admin', 'admin', 'admin@school.com', 1, 1);
+insert into users (username, email, type, employee)
+values ('admin', 'admin@school.com', 1, 1);
+
+insert into login (username, password)
+values (admin, $2a$10$1yeqKOPQUXUodxW0BLaGMOEPSQSY0KJNlkYxvtA55TaKL2a7xGdeS); -- test

@@ -79,6 +79,10 @@ public class Employees implements Serializable {
     @JoinColumn(name = "position", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Position position;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
+    private List<Message> messageList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
+    private List<Users> usersList;
 
     public Employees() {
     }
@@ -158,6 +162,24 @@ public class Employees implements Serializable {
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    @XmlTransient
+    public List<Message> getMessageList() {
+        return messageList;
+    }
+
+    public void setMessageList(List<Message> messageList) {
+        this.messageList = messageList;
+    }
+
+    @XmlTransient
+    public List<Users> getUsersList() {
+        return usersList;
+    }
+
+    public void setUsersList(List<Users> usersList) {
+        this.usersList = usersList;
     }
 
     @Override

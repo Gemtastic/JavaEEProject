@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -29,7 +31,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
     @NamedQuery(name = "Message.findById", query = "SELECT m FROM Message m WHERE m.id = :id"),
-    @NamedQuery(name = "Message.findByAuthor", query = "SELECT m FROM Message m WHERE m.author = :author"),
     @NamedQuery(name = "Message.findByMessage", query = "SELECT m FROM Message m WHERE m.message = :message")})
 public class Message implements Serializable {
 
@@ -42,13 +43,11 @@ public class Message implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
-    @Column(name = "author")
-    private String author;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 2147483647)
     @Column(name = "message")
     private String message;
+    @JoinColumn(name = "author", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Employees author;
 
     public Message() {
     }
@@ -57,9 +56,8 @@ public class Message implements Serializable {
         this.id = id;
     }
 
-    public Message(Integer id, String author, String message) {
+    public Message(Integer id, String message) {
         this.id = id;
-        this.author = author;
         this.message = message;
     }
 
@@ -71,20 +69,20 @@ public class Message implements Serializable {
         this.id = id;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Employees getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Employees author) {
+        this.author = author;
     }
 
     @Override

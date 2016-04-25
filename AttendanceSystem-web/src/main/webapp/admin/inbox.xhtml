@@ -1,0 +1,25 @@
+<ui:composition template="../template.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <h:form>
+            <h1>Messages:</h1>
+            <ui:repeat value="#{messages.messages}" var="message" rendered="#{messages.messages.size() > 0}">
+                <p:panel>
+                    <p>
+                        <strong>Author: </strong>
+                        <p:outputLabel value="#{message.author.firstname} #{message.author.lastname}" /><br/>
+                        <strong>Message: </strong><br/>
+                        <p:outputLabel value="#{message.message}" />
+                    </p>
+                </p:panel>
+                <p>
+                    <p:commandButton value="Delete Message" action="#{messages.deleteMessage(message.id)}" />
+                </p>
+                <br/>
+            </ui:repeat>
+        </h:form>
+    </ui:define>
+</ui:composition>
