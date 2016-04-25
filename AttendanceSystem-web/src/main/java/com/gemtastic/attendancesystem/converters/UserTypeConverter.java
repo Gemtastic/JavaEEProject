@@ -5,7 +5,7 @@
  */
 package com.gemtastic.attendancesystem.converters;
 
-import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalUserEJBService;
+import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalUserTypeEJBService;
 import com.gemtastic.attendencesystem.enteties.UserTypes;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -21,11 +21,11 @@ import javax.faces.convert.Converter;
 public class UserTypeConverter implements Converter {
     
     @EJB
-    LocalUserEJBService uEJB;
+    LocalUserTypeEJBService uEJB;
 
     @Override
     public UserTypes getAsObject(FacesContext fc, UIComponent uic, String id) {
-        return uEJB.findUserType(Integer.valueOf(id));
+        return uEJB.readOne(Integer.valueOf(id));
     }
 
     @Override

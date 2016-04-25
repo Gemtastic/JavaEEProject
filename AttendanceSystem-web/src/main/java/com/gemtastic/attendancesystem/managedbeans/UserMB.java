@@ -1,7 +1,7 @@
 package com.gemtastic.attendancesystem.managedbeans;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalEmployeeEJBService;
-import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalUserEJBService;
+import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalUserTypeEJBService;
 import com.gemtastic.attendancesystem.services.interfaces.LoginServices;
 import com.gemtastic.attendencesystem.enteties.Employees;
 import com.gemtastic.attendencesystem.enteties.Login;
@@ -11,7 +11,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 /**
@@ -25,12 +24,9 @@ public class UserMB {
     @EJB
     LoginServices loginEJB;
     @EJB
-    LocalUserEJBService uEJB;
+    LocalUserTypeEJBService uEJB;
     @EJB
     LocalEmployeeEJBService eEJB;
-    
-//    @ManagedProperty(value="#{param.user}")
-//    private Users user;
     
     private String username;
     private String password;
@@ -122,12 +118,4 @@ public class UserMB {
     public void setTypes(List<UserTypes> types) {
         this.types = types;
     }
-
-//    public Users getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(Users user) {
-//        this.user = user;
-//    }
 }
