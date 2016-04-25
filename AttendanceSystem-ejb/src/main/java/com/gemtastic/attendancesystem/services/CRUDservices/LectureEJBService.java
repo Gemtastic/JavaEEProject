@@ -21,8 +21,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- *
- * @author Gemtastic
+ * Local EJB bean for handling the Lecture entity and its CRUD operations.
+ * 
+ * @author Aizic Moisen
  */
 @Stateless
 public class LectureEJBService implements LocalLectureEJBService {
@@ -42,6 +43,12 @@ public class LectureEJBService implements LocalLectureEJBService {
         return result;
     }
     
+    /**
+     * Finds a lecture by a date and returns it.
+     * 
+     * @param date
+     * @return 
+     */
     @Override
     public List<Lectures> findByDate(LocalDate date){
         List<Lectures> lectures =  em.createNamedQuery("Lectures.findByDate", Lectures.class)
@@ -50,6 +57,12 @@ public class LectureEJBService implements LocalLectureEJBService {
         return lectures;
     }
     
+    /**
+     * Finds a list of lectures based on a given course's name.
+     * 
+     * @param course
+     * @return 
+     */
     @Override
     public List<Lectures> findByCourseName(Courses course) {
         Courses result = em.createNamedQuery("Courses.findByName", Courses.class)
@@ -58,6 +71,12 @@ public class LectureEJBService implements LocalLectureEJBService {
         return result.getLecturesList();
     }
     
+    /**
+     * Find all the lectures of a given teacher if any.
+     * 
+     * @param employee
+     * @return 
+     */
     @Override
     public List<Lectures> findByTeacher(Employees employee){
         List<Lectures> lectures = new ArrayList<>();
@@ -122,12 +141,24 @@ public class LectureEJBService implements LocalLectureEJBService {
         return result;
     }
     
+    /**
+     * Makes sure the entity manager is closed before the 
+     * destruction of the bean.
+     */
     @PreDestroy
     public void destruct() {
-        System.out.println("I'm about to be destroyed!");
         em.close();
     }
 
+    /**
+     * Finds all attended lectures for the given student inside the 
+     * given timeframe.
+     * 
+     * @param studentId
+     * @param startDate
+     * @param stopDate
+     * @return 
+     */
     @Override
     public List<Lectures> findByStudentAndDate(int studentId, LocalDate startDate, LocalDate stopDate) {
         System.out.println("Attempting query:");

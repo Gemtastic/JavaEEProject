@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.services.CRUDservices;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalEmployeeEJBService;
@@ -15,8 +10,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- *
- * @author Gemtastic
+ * Local EJB bean for handling the Employee entity and its CRUD.
+ * 
+ * @author Aizic Moisen
  */
 @Stateless
 public class EmployeeEJBService implements LocalEmployeeEJBService {

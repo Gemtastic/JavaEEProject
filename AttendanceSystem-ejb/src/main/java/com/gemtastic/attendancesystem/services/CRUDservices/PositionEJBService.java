@@ -14,8 +14,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- *
- * @author Gemtastic
+ * Local EJB bean for handling the position entity and its CRUD operations.
+ * 
+ * @author Aizic Moisen
  */
 @Stateless
 public class PositionEJBService implements LocalPositionEJBService {

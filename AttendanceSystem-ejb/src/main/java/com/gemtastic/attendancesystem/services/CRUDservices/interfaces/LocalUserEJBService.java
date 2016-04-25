@@ -20,6 +20,4 @@ import javax.ejb.Local;
 public interface LocalUserEJBService extends CRUDService<Users> {
     public Users findByUser(String uName);
     public Login findLoginUser(String uName);
-    public List<UserTypes> getUserTypes();
-    public UserTypes findUserType(int id);
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.services.CRUDservices;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalUserTypeEJBService;
@@ -14,8 +9,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- *
- * @author Gemtastic
+ * Local EJB bean for user type CRUD operations.
+ * 
+ * @author Aizic Moisen
  */
 @Stateless
 public class UserTypeEJBService implements LocalUserTypeEJBService {
@@ -26,7 +22,7 @@ public class UserTypeEJBService implements LocalUserTypeEJBService {
     /**
      * Finds one type based on id and returns it or null.
      * 
-     * @param type
+     * @param id
      * @return UserTypes
      */
     @Override
@@ -69,4 +65,13 @@ public class UserTypeEJBService implements LocalUserTypeEJBService {
         return result;
     }
     
+    /**
+     * Finds all types of users.
+     * 
+     * @return 
+     */
+    @Override
+    public List<UserTypes> getUserTypes() {
+        return em.createNamedQuery("UserTypes.findAll", UserTypes.class).getResultList();
+    }
 }

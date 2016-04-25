@@ -7,6 +7,7 @@ package com.gemtastic.attendancesystem.services.CRUDservices.interfaces;
 
 import com.gemtastic.attendancesystem.services.interfaces.CRUDService;
 import com.gemtastic.attendencesystem.enteties.UserTypes;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -15,5 +16,5 @@ import javax.ejb.Local;
  */
 @Local
 public interface LocalUserTypeEJBService extends CRUDService<UserTypes> {
-    
+    public List<UserTypes> getUserTypes();
 }

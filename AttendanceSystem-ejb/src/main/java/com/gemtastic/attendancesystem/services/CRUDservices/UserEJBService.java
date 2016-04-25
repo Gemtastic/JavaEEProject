@@ -7,7 +7,6 @@ package com.gemtastic.attendancesystem.services.CRUDservices;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalUserEJBService;
 import com.gemtastic.attendencesystem.enteties.Login;
-import com.gemtastic.attendencesystem.enteties.UserTypes;
 import com.gemtastic.attendencesystem.enteties.Users;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -16,8 +15,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- *
- * @author Gemtastic
+ * Local EJB bean for managing the user entity and it's CRUD along with some
+ * login operations.
+ * 
+ * @author Aizic Moisen
  */
 @Stateless
 public class UserEJBService implements LocalUserEJBService {
@@ -71,24 +72,26 @@ public class UserEJBService implements LocalUserEJBService {
         return result;
     }
     
+    /**
+     * Find user by the given username.
+     * 
+     * @param uName
+     * @return 
+     */
     @Override
     public Users findByUser(String uName) {
         Users result = em.createNamedQuery("Users.findByUsername", Users.class).setParameter("username", uName).getSingleResult();
         return result;
     }
 
+    /**
+     * Finds a login entity with the given username.
+     * 
+     * @param uName
+     * @return 
+     */
     @Override
     public Login findLoginUser(String uName) {
         return em.createNamedQuery("Login.findByUsername", Login.class).setParameter("username", uName).getSingleResult();
-    }
-
-    @Override
-    public List<UserTypes> getUserTypes() {
-        return em.createNamedQuery("UserTypes.findAll", UserTypes.class).getResultList();
-    }
-
-    @Override
-    public UserTypes findUserType(int id) {
-        return em.find(UserTypes.class, id);
     }
 }

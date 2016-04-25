@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.services.CRUDservices;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
@@ -15,8 +10,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- *
- * @author Gemtastic
+ * Local EJB bean for handling the Course entity with its CRUD.
+ * 
+ * @author Aizic Moisen
  */
 @Stateless
 public class CourseEJBService implements LocalCourseEJBService {
@@ -71,9 +67,11 @@ public class CourseEJBService implements LocalCourseEJBService {
         return result;
     }
     
+    /**
+     * Ensures the entity manager gets closed before destruction.
+     */
     @PreDestroy
     public void destruct() {
-        System.out.println("I'm about to be destroyed!");
         em.close();
     }
 }

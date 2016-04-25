@@ -138,4 +138,4 @@ insert into users (username, email, type, employee)
 values ('admin', 'admin@school.com', 1, 1);
 
 insert into login (username, password)
-values (admin, $2a$10$1yeqKOPQUXUodxW0BLaGMOEPSQSY0KJNlkYxvtA55TaKL2a7xGdeS); -- test
+values (admin, $2a$10$.9KvtMVJpSp29OXULOEx.uaquBAZd4Ssfn9P9JgAv7DnszJbFwKZC); -- admin

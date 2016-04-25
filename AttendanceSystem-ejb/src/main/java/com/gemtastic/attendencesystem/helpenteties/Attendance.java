@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendencesystem.helpenteties;
 
 import com.gemtastic.attendencesystem.enteties.Lectures;
@@ -10,8 +5,9 @@ import com.gemtastic.attendencesystem.enteties.Students;
 import java.io.Serializable;
 
 /**
- *
- * @author Gemtastic
+ * Attendance support entity.
+ * 
+ * @author Aizic Moisen
  */
 public class Attendance implements Serializable {
     

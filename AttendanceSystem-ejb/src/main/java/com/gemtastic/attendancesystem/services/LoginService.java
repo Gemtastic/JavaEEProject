@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.services;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalUserEJBService;
@@ -17,8 +12,10 @@ import javax.persistence.PersistenceContext;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
- *
- * @author Gemtastic
+ * A login service for handling login, logout, verification and other user
+ * related queries.
+ * 
+ * @author Aizic Moisen
  */
 @Stateless
 public class LoginService implements LoginServices{
@@ -67,6 +64,13 @@ public class LoginService implements LoginServices{
         return hashed;
     }
 
+    /**
+     * Registering function for a new user.
+     * 
+     * @param user
+     * @param login
+     * @return 
+     */
     @Override
     public boolean register(Users user, Login login) {
         Users userResult = em.merge(user);
@@ -75,11 +79,23 @@ public class LoginService implements LoginServices{
         return userResult.getId() != null && loginResult != null;
     }
 
+    /**
+     * Method for unregistering a user. Not implemented in current version. Will
+     * throw an exception.
+     * @param user
+     * @return 
+     */
     @Override
     public boolean unregister(Users user) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Finds the user type of a user with the given user name.
+     * 
+     * @param username
+     * @return 
+     */
     @Override
     public UserTypes getUserType(String username) {
         Users user = uEJB.findByUser(username);

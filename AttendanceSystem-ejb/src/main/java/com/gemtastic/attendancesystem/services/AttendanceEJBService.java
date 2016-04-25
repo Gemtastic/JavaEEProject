@@ -12,8 +12,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 /**
- *
- * @author Gemtastic
+ * Local EJB bean for managing the attendance support entity.
+ * 
+ * @author Aizic Moisen
  */
 @Stateless
 public class AttendanceEJBService implements LocalAttendanceEJBService {
@@ -105,5 +106,4 @@ public class AttendanceEJBService implements LocalAttendanceEJBService {
         
         return true;
     }
-    
 }

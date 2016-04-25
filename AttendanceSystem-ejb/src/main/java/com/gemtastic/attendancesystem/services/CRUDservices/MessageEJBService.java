@@ -8,8 +8,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- *
- * @author Gemtastic
+ * Local EJB bean for handling the Message entity and its CRUP operations.
+ * 
+ * @author Aizic Moisen
  */
 @Stateless
 public class MessageEJBService implements LocalMessageEJBService {

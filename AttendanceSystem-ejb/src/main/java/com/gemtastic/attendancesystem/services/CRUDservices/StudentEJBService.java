@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.services.CRUDservices;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
@@ -19,9 +14,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
- * Service for CRUDing the Students object.
+ * Local service for CRUDing the Students object.
  * 
- * @author Gemtastic
+ * @author Aizic Moisen
  */
 @Stateless
 public class StudentEJBService implements LocalStudentEJBService {
@@ -84,6 +79,12 @@ public class StudentEJBService implements LocalStudentEJBService {
         return result;
     }
 
+    /**
+     * Finds all students enrolling the given years.
+     * 
+     * @param enrollYear
+     * @return 
+     */
     @Override
     public List<Students> findByEnrollmentYear(int enrollYear) {
         List<Students> result = em.createQuery("SELECT s FROM Students s WHERE s.regDate BETWEEN :startDate AND :endDate")
