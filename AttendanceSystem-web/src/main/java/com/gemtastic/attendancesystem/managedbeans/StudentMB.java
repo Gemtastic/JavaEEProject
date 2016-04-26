@@ -4,6 +4,8 @@ import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCour
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Students;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Year;
@@ -16,28 +18,32 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import org.apache.commons.io.IOUtils;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 /**
  * Managed bean for the student.
+ *
  * @author Aizic Moisen
  */
 @ManagedBean(name = "student")
 @RequestScoped
 public class StudentMB {
-    
+
     @EJB
     LocalStudentEJBService sEJB;
-    
+
     @EJB
     LocalCourseEJBService cEJB;
-    
-    @ManagedProperty(value="#{param.id}")
+
+    @ManagedProperty(value = "#{param.id}")
     private int courseId;
-    
-    @ManagedProperty(value="#{param.student}")
+
+    @ManagedProperty(value = "#{param.student}")
     private int studentId;
-    
+
     private int enrollYear;
     private Courses course;
     public Date regdate;
@@ -51,21 +57,19 @@ public class StudentMB {
     private List<Students> students;
     private List<Students> unregistered;
     private List<Integer> years;
-    
+
     public Students student;
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         disableButtonOnNoParam();
         student = sEJB.readOne(studentId);
         students = sEJB.findAll();
         years = new ArrayList<>();
-        for(int i = Year.now().getValue(); i >= 1969; i--) {
+        for (int i = Year.now().getValue(); i >= 1969; i--) {
             years.add(i);
         }
-        System.out.println("You initialized a student bean! course id is: " + courseId);
         course = cEJB.readOne(courseId);
-        System.out.println("Course: " + course);
         if (course != null) {
             nonAttendingStudentsOnly();
         }
@@ -73,35 +77,32 @@ public class StudentMB {
 
     public StudentMB() {
     }
-    
+
     /**
-     * Sets the student list property based on the students who enrolled that year.
+     * Sets the student list property based on the students who enrolled that
+     * year.
      */
     public void onYearSelect() {
         students = sEJB.findByEnrollmentYear(enrollYear);
-        if(students != null) {
-            System.out.println("Student count: " + students.size());
-        } else {
-            System.out.println("Students list is null");
-        }
     }
-    
+
     /**
      * Edits a student and redirects to it.
-     * @return 
+     *
+     * @return
      */
     public String editStudent() {
-        System.out.println("You want to edit student: " + studentId + ", " + student.getFirstname());
+        upload();
         sEJB.upsert(student);
         return "student?faces-redirect=true&student=" + studentId;
     }
-    
+
     /**
      * Creates a student and redirects to the student list.
-     * 
-     * @return 
+     *
+     * @return
      */
-    public String createStudent(){
+    public String createStudent() {
         student = new Students();
         student.setEmail(email);
         student.setFirstname(firstname);
@@ -109,55 +110,61 @@ public class StudentMB {
         student.setPhone(phone);
         student.setRegDate(Date.valueOf(LocalDate.now()));
         student.setSocSecNo(socialSecurityNo);
+        if (file != null) {
+            upload();
+        }
         sEJB.upsert(student);
         return "students?faces-redirect=true";
     }
-    
+
     /**
      * Disables buttons when there are no url params.
      */
-    public void disableButtonOnNoParam(){
+    public void disableButtonOnNoParam() {
         String param = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        if(param != null) {
+        if (param != null) {
             disabled = false;
         }
     }
-    
+
     /**
      * Deletes a student and redirects to the student list.
-     * @return 
+     *
+     * @return
      */
     public String deleteStudent() {
         sEJB.delete(student);
         return "students?faces-redirect=true";
     }
-    
+
     /**
      * Adds a student to a course and redirects to the course if successful or
      * redirects back to the add to courses page.
-     * @return 
+     *
+     * @return
      */
     public String addToCourse() {
         if (course != null) {
-            List<Students> list = course.getStudentsList();
-            list.add(student);
-            course.setStudentsList(list);
+            course.getStudentsList().add(student);
+            student.getCoursesList().add(course);
             cEJB.upsert(course);
+            sEJB.upsert(student);
             return "/courses/course?id=" + course.getId() + "&faces-redirect=true";
         } else {
             return "addToCourse?id=0&faces-redirect=true";
         }
     }
-    
+
     /**
      * Gets a list of all the students not already attending the course.
-     * @return 
+     *
+     * @return
      */
     public List<Students> nonAttendingStudentsOnly() {
         List<Students> attending = course.getStudentsList();
         unregistered = new ArrayList<>();
-        
-        for(Students s : students) {
+
+        for (Students s : students) {
             boolean attend = attending.contains(s);
             if (!attend) {
                 unregistered.add(s);
@@ -165,14 +172,14 @@ public class StudentMB {
         }
         return unregistered;
     }
-    
+
     /**
      * Removes a student from a course and redirects to the course the student
      * was removed from.
-     * @return 
+     *
+     * @return
      */
     public String removeFromCourse() {
-        System.out.println("Student id:" + studentId);
         Students toRemove = sEJB.readOne(studentId);
         List<Students> attending = course.getStudentsList();
         attending.remove(toRemove);
@@ -180,21 +187,37 @@ public class StudentMB {
         course = cEJB.upsert(course);
         return "course.xhtml?id=" + courseId + "&faces-redirect=true";
     }
-    
+
     // Not implemented file upload
     public UploadedFile getFile() {
         return file;
     }
- 
+
     public void setFile(UploadedFile file) {
         this.file = file;
     }
-     
+
     public void upload() {
-        if(file != null) {
-            FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+        if (file != null) {
+            try {
+                byte[] img = IOUtils.toByteArray(file.getInputstream());
+                student.setImage(img);
+                FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            } catch (IOException e) {
+                System.out.println("IOException deluxe!");
+            } catch (Exception e) {
+                System.out.println("Caught exception: " + e);
+            }
         }
+    }
+
+    public StreamedContent streamImage() {
+        if (student.getImage() != null) {
+            ByteArrayInputStream img = new ByteArrayInputStream(student.getImage());
+            return new DefaultStreamedContent(img);
+        }
+        return null;
     }
     // End not implemented file upload.
 

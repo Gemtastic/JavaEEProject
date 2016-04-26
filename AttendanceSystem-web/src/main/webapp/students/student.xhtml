@@ -20,19 +20,29 @@
 
                         <strong>Email:</strong>
                         <p:outputLabel value="#{student.student.email}" />
+                        
+                        <strong>Image:</strong>
+                        <h:graphicImage alt="Student image" rendered="#{student.student.image == null}" value="#{student.student.image == null ? '/resources/img/no_image.jpg' : student.streamImage()}">
+                            <f:param id="student" value="#{param.student}" />
+                        </h:graphicImage>
                     </h:panelGrid>
                 </p:panel>
             </p>
-            
-            <p:commandButton value="Delete Student" ajax="false" action="#{student.deleteStudent}">
-                <f:param name="student" value="#{student.student.id}" />
-            </p:commandButton>
-            <p:button value="Edit Student" outcome="editStudent?student=#{student.student.id}" />
-            
             <p>
-                <p:chart type="line" model="#{statistics.overall}" style="height:400px;"/>
+                <p:commandButton value="Delete Student" ajax="false" action="#{student.deleteStudent}">
+                    <f:param name="student" value="#{student.student.id}" />
+                </p:commandButton>
+                <p:button value="Edit Student" outcome="editStudent?student=#{student.student.id}" />
             </p>
+
             
+            <br/>
+            <p:panel rendered="#{student.student.coursesList.size() > 0}">
+                <p>
+                    <p:chart type="line" model="#{statistics.overall}" style="height:400px;"/>
+                </p>
+            </p:panel>
+
             <ui:repeat value="#{student.student.coursesList}" var="cour" >
                 <p>
                     <strong>Course: </strong><p:link styleClass="link" value="#{cour.name}" outcome="/courses/course?id=#{cour.id}" style="text-decoration: none; color: #333333" />

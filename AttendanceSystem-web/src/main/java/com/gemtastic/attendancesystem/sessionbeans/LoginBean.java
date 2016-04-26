@@ -44,7 +44,6 @@ public class LoginBean implements Serializable {
     public String logIn() {
         boolean verified = loginService.verify(username, password);
         if (verified) {
-            System.out.println("User credentials are valid!");
             doLogin();
             return "index.xhtml?faces-redirect=true";
         }
@@ -69,7 +68,7 @@ public class LoginBean implements Serializable {
      */
     public boolean isLoggedIn() {
         boolean online = false;
-        if (sessionBean != null) {
+        if (sessionBean != null && session != null) {
             online = sessionBean.isLoggedIn();
         }
         return online;

@@ -27,7 +27,7 @@ import org.primefaces.model.chart.LineChartSeries;
 
 /**
  * Statistics bean for managing the statistics.
- * 
+ *
  * @author Aizic Moisen
  */
 @ManagedBean(name = "statistics")
@@ -65,15 +65,16 @@ public class StatisticsBean {
 
     @PostConstruct
     public void init() {
+        overall = new LineChartModel();
         drawOverallAttendance();
     }
-    
+
     /**
-     * Returns a list of the lectures that the student the studentId param 
-     * represents has attended in the month of the given date. 
-     * 
+     * Returns a list of the lectures that the student the studentId param
+     * represents has attended in the month of the given date.
+     *
      * @param firstDayOfMonth
-     * @return 
+     * @return
      */
     public int fetchLecturesAttendedByMonth(Date firstDayOfMonth) {
         System.out.println("About to get attendance.");
@@ -107,15 +108,15 @@ public class StatisticsBean {
 
     /**
      * Compares a current map of "first" and "last" dates with the given
-     * course's dates and returns the dates that were the least and most 
-     * recent.
+     * course's dates and returns the dates that were the least and most recent.
+     *
      * @param current
      * @param course
-     * @return 
+     * @return
      */
     private Map<String, Date> isMoreRecent(Map<String, Date> current, Courses course) {
         Map<String, Date> dates = current;
-        
+
         Date first = null;
         Date last = null;
 
@@ -140,36 +141,37 @@ public class StatisticsBean {
         System.out.println("First date: " + first + ", Last date: " + last);
         return dates;
     }
-    
+
     /**
-     * Gets a HashMap with the first and last dates of the given 
-     * courses' start and stop dates.
+     * Gets a HashMap with the first and last dates of the given courses' start
+     * and stop dates.
+     *
      * @param courses
-     * @return 
+     * @return
      */
     private Map<String, Date> getFirstAndLastDatesOfCourses(List<Courses> courses) {
-        
+
         Map<String, Date> dates = new HashMap<>();
-        
-        for(Courses c : courses){
+
+        for (Courses c : courses) {
             dates = isMoreRecent(dates, c);
         }
-        
+
         return dates;
     }
-    
+
     /**
      * Sets up a LineChartSeries with the date and attendance.
-     * 
+     *
      * @param student
-     * @return 
+     * @return
      */
     private LineChartSeries setUpLineChartSeries(Students student) {
         LineChartSeries chart = new LineChartSeries();
-        
+
         int attendance = 0;
         for (Courses c : student.getCoursesList()) {
-            
+
             List<Lectures> lectures = c.getLecturesList();
             Collections.sort(lectures, lectureComparator);
 
@@ -183,55 +185,54 @@ public class StatisticsBean {
         }
         return chart;
     }
-    
+
     /**
      * Counts the total amount of lectures for the given list of courses.
-     * 
+     *
      * @param courses
-     * @return 
+     * @return
      */
     private int totalLectureCount(List<Courses> courses) {
         int total = 0;
-        
-        for(Courses c : courses) {
+
+        for (Courses c : courses) {
             total += c.getLecturesList().size();
         }
-        
+
         return total;
     }
 
     /**
-     * Sets up a LineChartModel to display the student's attendance
-     * over time.
+     * Sets up a LineChartModel to display the student's attendance over time.
      */
     private void drawOverallAttendance() {
         Students student = sEJB.readOne(studentId);
-        overall = new LineChartModel();
-        
-        LineChartSeries overallAttendance = setUpLineChartSeries(student);
-        
-        overallAttendance.setLabel("Over-all attendance:");
-        
-        overall.addSeries(overallAttendance);
+        if (!student.getCoursesList().isEmpty()) {
+            LineChartSeries overallAttendance = setUpLineChartSeries(student);
 
-        overall.setTitle("Attendance graph");
-        overall.setZoom(false);
-        overall.getAxis(AxisType.Y).setLabel("Attended lectures");
-        overall.getAxis(AxisType.Y).setMax(totalLectureCount(student.getCoursesList()));
+            overallAttendance.setLabel("Over-all attendance:");
 
-        DateAxis axis = new DateAxis("Dates");
-        axis.setTickAngle(-50);
-        
-        // Set the total course range of dates
-        Map<String, Date> dates = getFirstAndLastDatesOfCourses(student.getCoursesList());
-        Date first = dates.get("first");
-        Date last = dates.get("last");
-        
-        axis.setMax(converter.convertDateToString(last));
-        axis.setMin(converter.convertDateToString(first));
-        axis.setTickFormat("%b %#d, %y");
+            overall.addSeries(overallAttendance);
 
-        overall.getAxes().put(AxisType.X, axis);
+            overall.setTitle("Attendance graph");
+            overall.setZoom(false);
+            overall.getAxis(AxisType.Y).setLabel("Attended lectures");
+            overall.getAxis(AxisType.Y).setMax(totalLectureCount(student.getCoursesList()));
+
+            DateAxis axis = new DateAxis("Dates");
+            axis.setTickAngle(-50);
+
+            // Set the total course range of dates
+            Map<String, Date> dates = getFirstAndLastDatesOfCourses(student.getCoursesList());
+            Date first = dates.get("first");
+            Date last = dates.get("last");
+
+            axis.setMax(converter.convertDateToString(last));
+            axis.setMin(converter.convertDateToString(first));
+            axis.setTickFormat("%b %#d, %y");
+
+            overall.getAxes().put(AxisType.X, axis);
+        }
     }
 
     /**

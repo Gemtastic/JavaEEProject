@@ -1,5 +1,6 @@
 package com.gemtastic.attendancesystem.filters;
 
+import com.gemtastic.attendancesystem.sessionbeans.SessionBean;
 import java.io.IOException;
 import javax.faces.application.ResourceHandler;
 import javax.servlet.Filter;
@@ -40,8 +41,10 @@ public class LoginFilter implements Filter {
         String url = req.getRequestURI();
         String loginURL = req.getContextPath() + "/login.xhtml";
         
-        Boolean logIn = (Boolean) session.getAttribute("isLoggedIn");
-        boolean loggedIn = logIn != null && logIn != false;
+        // Get session managed bean
+        SessionBean sessionBean = (SessionBean) session.getAttribute("sessionBean");
+        
+        boolean loggedIn = sessionBean != null && sessionBean.isLoggedIn() != false;
         boolean resourceRequest = req.getRequestURI().startsWith(req.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER) ||
                 req.getRequestURI().startsWith(req.getContextPath() + "/resources/");
         boolean loginRequest = req.getRequestURI().equals(loginURL);

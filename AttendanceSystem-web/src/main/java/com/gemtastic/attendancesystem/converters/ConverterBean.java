@@ -20,7 +20,6 @@ public class ConverterBean {
      * @return 
      */
     public String convertDateToString(Date date) {
-        System.out.println("Date: " + date);
         Format format = new SimpleDateFormat("yyyy-MM-dd");
         return format.format(date);
     }
