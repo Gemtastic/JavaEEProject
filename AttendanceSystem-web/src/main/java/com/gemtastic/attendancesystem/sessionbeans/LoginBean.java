@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.sessionbeans;
 
 import com.gemtastic.attendancesystem.services.interfaces.LoginServices;
@@ -16,8 +11,9 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 /**
- *
- * @author Gemtastic
+ * Managed bean for handling the login logic.
+ * 
+ * @author Aizic Moisen
  */
 @RequestScoped
 @ManagedBean(name = "login")
@@ -40,6 +36,11 @@ public class LoginBean implements Serializable {
         session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
     }
 
+    /**
+     * Attempts to log the user in. If successful it redirects to index, else
+     * it redirects to the login page.
+     * @return 
+     */
     public String logIn() {
         boolean verified = loginService.verify(username, password);
         if (verified) {
@@ -50,6 +51,10 @@ public class LoginBean implements Serializable {
         return "login.xhtml?faces-redirect=true";
     }
 
+    /**
+     * Logs a user out and redirects to the login page.
+     * @return 
+     */
     public String logOut() {
         if (session != null) {
             return doLogout();
@@ -57,23 +62,31 @@ public class LoginBean implements Serializable {
         return "login.xhtml?faces-redirect=true";
     }
 
+    /**
+     * Checks if the user is logged in.
+     * 
+     * @return 
+     */
     public boolean isLoggedIn() {
         boolean online = false;
-        if (session != null) {
-            Boolean attribute = (Boolean) session.getAttribute(loggedIn);
-            if (attribute != null) {
-                online = attribute;
-            }
+        if (sessionBean != null) {
+            online = sessionBean.isLoggedIn();
         }
         return online;
     }
     
+    /**
+     * Gets the active users user type.
+     * @return 
+     */
     public String getUserType() {
-        System.out.println("Getting the user type");
-        username = (String) session.getAttribute(loggedInUser);
+        username = (String) sessionBean.getUsertype();
         return loginService.getUserType(username).getName();
     }
 
+    /**
+     * Sets up the user as logged in in the http session and the sessionBean.
+     */
     private void doLogin() {
         if (session != null) {
             String userType = loginService.getUserType(username).getName();
@@ -85,8 +98,15 @@ public class LoginBean implements Serializable {
         }
     }
 
+    /**
+     * invalidates the session and resets the sessionBean.
+     * @return 
+     */
     private String doLogout() {
         session.invalidate();
+        sessionBean.setLoggedIn(false);
+        sessionBean.setUsername("");
+        sessionBean.setUsertype("");
         return "login.xhtml?faces-redirect=true";
     }
 

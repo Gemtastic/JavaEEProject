@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.converters;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
@@ -14,23 +9,38 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
 /**
- *
- * @author Gemtastic
+ * Converter for courses.
+ * 
+ * @author Aizic Moisen
  */
 @ManagedBean(name="courseConverter")
 public class CourseConverter implements Converter {
     @EJB
     LocalCourseEJBService ejb;
     
+    /**
+     * Takes a string integer and fetches the course with the corresponding id.
+     * 
+     * @param fc
+     * @param uic
+     * @param value
+     * @return 
+     */
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
         Courses course = ejb.readOne(Integer.valueOf(value));
         return course;
     }
-
+    
+    /**
+     * Gets a Course object and transforms it into a string containing its id.
+     * @param fc
+     * @param uic
+     * @param o
+     * @return 
+     */
     @Override
     public String getAsString(FacesContext fc, UIComponent uic, Object o) {
-//        System.out.println("Course obj: " + o);
         Courses course = (Courses) o;
         return String.valueOf(course.getId());
     }

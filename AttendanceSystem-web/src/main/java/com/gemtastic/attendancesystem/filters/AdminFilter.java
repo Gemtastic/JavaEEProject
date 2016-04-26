@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.filters;
 
 import com.gemtastic.attendancesystem.sessionbeans.SessionBean;
@@ -18,8 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
- * @author Gemtastic
+ * A filter for ensuring access is limited to admins.
+ * 
+ * @author Aizic Moisen
  */
 
 public class AdminFilter implements Filter {
@@ -28,19 +24,29 @@ public class AdminFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
+    /**
+     * The filter method. It's set to trigger on /admin/ paths only.
+     * @param request
+     * @param response
+     * @param chain
+     * @throws IOException
+     * @throws ServletException 
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // Cast the servlet responses into HttpServlets.
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
+        // Get session
         HttpSession session = (HttpSession) req.getSession();
-        String url = req.getRequestURI();
+        // Index path url
         String indexURL = req.getContextPath() + "/index.xhtml";
         
+        // Get session managed bean
         SessionBean sessionBean = (SessionBean) session.getAttribute("sessionBean");
         
-        Boolean logIn = (Boolean) session.getAttribute("isLoggedIn");
         String userType  = sessionBean.getUsertype();
-        boolean loggedIn = logIn != null && logIn != false;
+        boolean loggedIn = sessionBean.isLoggedIn();
         boolean admin = userType.equals("admin");
         boolean adminRequest = req.getRequestURI().startsWith(req.getContextPath() + "/admin/");
                 

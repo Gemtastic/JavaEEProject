@@ -14,8 +14,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 /**
- *
- * @author Gemtastic
+ * Managed bean for the user.
+ * @author Aizic Moisen
  */
 @ManagedBean(name="userMB")
 @ViewScoped
@@ -46,8 +46,11 @@ public class UserMB {
     public UserMB() {
     }
 
+    /**
+     * Registers a new user and redirects to the index page.
+     * @return 
+     */
     public String registerUser() {
-        System.out.println("About to register this user: ");
         Users user = new Users();
         user.setEmail(email);
         user.setEmployee(employee);

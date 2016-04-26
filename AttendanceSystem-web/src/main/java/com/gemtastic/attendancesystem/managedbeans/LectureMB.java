@@ -17,8 +17,9 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
 /**
- *
- * @author Gemtastic
+ * Managed bean for the lecture.
+ * 
+ * @author Aizic Moisen
  */
 @ManagedBean(name="lecture")
 @RequestScoped
@@ -26,9 +27,6 @@ public class LectureMB {
     
     @EJB
     private LocalLectureEJBService lEJB;
-    
-    @EJB
-    private LocalStudentEJBService sEJB;
     
     @EJB
     private LocalCourseEJBService cEJB;
@@ -56,23 +54,31 @@ public class LectureMB {
     
     private Attendance[] att;
     
+    /**
+     * Creates a new lecture and redirects to its course.
+     * 
+     * @return 
+     */
     public String onCreate() {
-        System.out.println("You got to creation! " + course + ", " + param);
         Lectures l = setLecture();
         lecture = lEJB.upsert(l);
-        System.out.println("lecture: " + lecture);
         String path = "/courses/course?faces-redirect=true&id=" + course.getId();
         return path;
     }
     
+    /**
+     * Updates a lecture and redirects to its course.
+     * @return 
+     */
     public String updateLecture() {
-        System.out.println("You want to update the lecture! " + course + ", " + lecture);
-        
-        Lectures result = lEJB.upsert(lecture);
-        System.out.println("result: " + result);
+        lEJB.upsert(lecture);
         return "/courses/course?faces-redirect=true&id=" + lecture.getCourse().getId();
     }
     
+    /**
+     * Creates a new lecture with information from the parameter's course.
+     * @return 
+     */
     public Lectures setLecture() {
         if(course == null && param != null) {
             course = param;
@@ -87,12 +93,10 @@ public class LectureMB {
     
     @PostConstruct
     public void init() {
-        System.out.println("You initialized a Lecture bean! Id is: " + paramId + ", " + lectureId);
         lectures = lEJB.findAll();
         courses = cEJB.findAll();
         if(paramId != 0) {
             param = cEJB.readOne(paramId);
-            System.out.println("Param is: " + param);
             disabled = true;
         } else {
             disabled = false;
@@ -103,22 +107,34 @@ public class LectureMB {
             startTime = startTime!= null ? startTime : lecture.getStart();
             stopTime = stopTime != null ? stopTime : lecture.getStop();
         }
-        System.out.println("Disabled: " + disabled);
     }
     
+    /**
+     * Deletes a lecture and redirects to its course.
+     * 
+     * @return 
+     */
     public String deleteLecture(){
-        System.out.println("You want to delete: " + lectureId);
         Lectures placeholder = new Lectures();
         placeholder.setId(lectureId);
         lEJB.delete(placeholder);
         return "course?id=" + paramId + "&faces-redirect=true";
     }
     
+    /**
+     * Returns a student list based off of the id property.
+     * @return 
+     */
     public List<Students> getStudentList(){
         Lectures l = lEJB.readOne(id);
         return l.getStudentsList();
     }
     
+    /**
+     * Returns a lecture of the given id.
+     * @param id
+     * @return 
+     */
     public Lectures getLectureById(int id){
         Lectures l = lEJB.readOne(id);
         return l;

@@ -19,8 +19,8 @@ import javax.faces.context.FacesContext;
 import org.primefaces.model.UploadedFile;
 
 /**
- *
- * @author Gemtastic
+ * Managed bean for the student.
+ * @author Aizic Moisen
  */
 @ManagedBean(name = "student")
 @RequestScoped
@@ -74,8 +74,10 @@ public class StudentMB {
     public StudentMB() {
     }
     
+    /**
+     * Sets the student list property based on the students who enrolled that year.
+     */
     public void onYearSelect() {
-        System.out.println("Year was selected: " + enrollYear);
         students = sEJB.findByEnrollmentYear(enrollYear);
         if(students != null) {
             System.out.println("Student count: " + students.size());
@@ -84,12 +86,21 @@ public class StudentMB {
         }
     }
     
+    /**
+     * Edits a student and redirects to it.
+     * @return 
+     */
     public String editStudent() {
         System.out.println("You want to edit student: " + studentId + ", " + student.getFirstname());
         sEJB.upsert(student);
         return "student?faces-redirect=true&student=" + studentId;
     }
     
+    /**
+     * Creates a student and redirects to the student list.
+     * 
+     * @return 
+     */
     public String createStudent(){
         student = new Students();
         student.setEmail(email);
@@ -102,6 +113,9 @@ public class StudentMB {
         return "students?faces-redirect=true";
     }
     
+    /**
+     * Disables buttons when there are no url params.
+     */
     public void disableButtonOnNoParam(){
         String param = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
         if(param != null) {
@@ -109,14 +123,21 @@ public class StudentMB {
         }
     }
     
+    /**
+     * Deletes a student and redirects to the student list.
+     * @return 
+     */
     public String deleteStudent() {
-        System.out.println("You want to delete student: " + student);
         sEJB.delete(student);
         return "students?faces-redirect=true";
     }
     
+    /**
+     * Adds a student to a course and redirects to the course if successful or
+     * redirects back to the add to courses page.
+     * @return 
+     */
     public String addToCourse() {
-        System.out.println("You got here!");
         if (course != null) {
             List<Students> list = course.getStudentsList();
             list.add(student);
@@ -128,6 +149,10 @@ public class StudentMB {
         }
     }
     
+    /**
+     * Gets a list of all the students not already attending the course.
+     * @return 
+     */
     public List<Students> nonAttendingStudentsOnly() {
         List<Students> attending = course.getStudentsList();
         unregistered = new ArrayList<>();
@@ -141,6 +166,11 @@ public class StudentMB {
         return unregistered;
     }
     
+    /**
+     * Removes a student from a course and redirects to the course the student
+     * was removed from.
+     * @return 
+     */
     public String removeFromCourse() {
         System.out.println("Student id:" + studentId);
         Students toRemove = sEJB.readOne(studentId);
@@ -151,6 +181,7 @@ public class StudentMB {
         return "course.xhtml?id=" + courseId + "&faces-redirect=true";
     }
     
+    // Not implemented file upload
     public UploadedFile getFile() {
         return file;
     }
@@ -165,6 +196,7 @@ public class StudentMB {
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
     }
+    // End not implemented file upload.
 
     public String getFirstname() {
         return firstname;

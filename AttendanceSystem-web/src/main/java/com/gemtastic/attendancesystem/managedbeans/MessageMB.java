@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.managedbeans;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalMessageEJBService;
@@ -14,8 +9,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 /**
- * 
- * @author Gemtastic
+ * Managed bean for the messages.
+ * @author Aizic Moisen
  */
 @ManagedBean(name="messages")
 @RequestScoped
@@ -34,6 +29,11 @@ public class MessageMB {
         messages = mEJB.findAll();
     }
     
+    /**
+     * Deletes the message with the given id.
+     * @param id
+     * @return 
+     */
     public String deleteMessage(int id) {
         System.out.println("You want to delete: " + id);
         mEJB.delete(mEJB.readOne(id));

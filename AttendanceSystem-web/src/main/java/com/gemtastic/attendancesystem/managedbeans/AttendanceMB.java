@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.managedbeans;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
@@ -39,8 +34,9 @@ import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 /**
- *
- * @author Gemtastic
+ * Managebean for handling attendances.
+ * 
+ * @author Aizic Moisen
  */
 @ManagedBean(name = "attendances")
 @RequestScoped
@@ -97,6 +93,12 @@ public class AttendanceMB {
         }
     }
 
+    /**
+     * Sets up the current attendance managed bean with course and lecture and
+     * attendance from the given lecture.
+     * 
+     * @param lecture 
+     */
     public void setUp(Lectures lecture) {
         course = lecture.getCourse();
         this.lecture = lecture;
@@ -106,9 +108,14 @@ public class AttendanceMB {
         }
     }
 
+    /**
+     * Saves the attendance and sends a message through JMS about it. Redirects 
+     * back to the course.
+     * 
+     * @param attending
+     * @return 
+     */
     public String submitAttendance(Attendance[] attending) {
-        System.out.println("You submitted your attendance!" + id + ", " + course);
-        System.out.println(Arrays.toString(attending));
         aEJB.saveAttendance(attending);
         
         // attempting JMS implementation here
@@ -121,18 +128,33 @@ public class AttendanceMB {
     
 
     // TODO useless
-    public String viewAttendance(Lectures l) {
-        System.out.println("You're viewing the attendance!");
-        System.out.println("lecture: " + l);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("lecture", l);
-        return "lectures/attendance?faces-redirect=true";
-    }
+//    public String viewAttendance(Lectures l) {
+//        System.out.println("You're viewing the attendance!");
+//        System.out.println("lecture: " + l);
+//        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("lecture", l);
+//        return "lectures/attendance?faces-redirect=true";
+//    }
 
+    /**
+     * Checks if the given student was attending the given lecture.
+     * 
+     * @param lecture
+     * @param student
+     * @return 
+     */
     public String attended(Lectures lecture, Students student) {
         String answer = student.getLecturesList().contains(lecture) ? "Yes" : "No";
         return answer;
     }
 
+    /**
+     * Retrieves the percentage attendance on the course total of the given 
+     * course and the given student.
+     * 
+     * @param course
+     * @param student
+     * @return 
+     */
     public double attendanceStats(Courses course, Students student) {
         stats = statistics.courseStatistics(course, student);
         return stats.getAttendancePercent();

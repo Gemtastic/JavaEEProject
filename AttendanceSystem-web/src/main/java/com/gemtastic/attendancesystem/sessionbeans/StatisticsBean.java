@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.sessionbeans;
 
 import com.gemtastic.attendancesystem.converters.ConverterBean;
@@ -31,8 +26,9 @@ import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
 /**
- *
- * @author Gemtastic
+ * Statistics bean for managing the statistics.
+ * 
+ * @author Aizic Moisen
  */
 @ManagedBean(name = "statistics")
 public class StatisticsBean {
@@ -47,10 +43,6 @@ public class StatisticsBean {
     LocalCourseEJBService cEJB;
 
     ConverterBean converter = new ConverterBean();
-
-//    private Statistics stats;
-//    @ManagedProperty(value="param.course")
-    private int courseId;
 
     @ManagedProperty(value = "#{param.student}")
     private int studentId;
@@ -77,25 +69,20 @@ public class StatisticsBean {
     }
     
     /**
+     * Returns a list of the lectures that the student the studentId param 
+     * represents has attended in the month of the given date. 
      * 
      * @param firstDayOfMonth
      * @return 
      */
     public int fetchLecturesAttendedByMonth(Date firstDayOfMonth) {
         System.out.println("About to get attendance.");
-        List<Lectures> attendances = lEJB.findByStudentAndDate(studentId, LocalDate.of(2016, 01, 01), LocalDate.of(2016, 05, 30));
-        Collections.sort(attendances, new Comparator<Lectures>() {
-            @Override
-            public int compare(Lectures toTheLeft, Lectures toTheRight) {
-                if (toTheLeft.getDate().getTime() > toTheRight.getDate().getTime()) {
-                    return 1;
-                } else if (toTheLeft.getDate().getTime() == toTheRight.getDate().getTime()) {
-                    return 0;
-                } else {
-                    return -1;
-                }
-            }
-        });
+        // Converts the given date to Localdates of the first and last dates of the month.
+        LocalDate firstDay = LocalDate.ofEpochDay(firstDayOfMonth.getTime()).withDayOfMonth(1);
+        LocalDate lastDay = LocalDate.of(firstDay.getYear(), firstDay.getMonthValue(), firstDay.lengthOfMonth());
+        System.out.println("First day of month: " + firstDay + ", Last day of month: " + lastDay);
+        List<Lectures> attendances = lEJB.findByStudentAndDate(studentId, firstDay, lastDay);
+        Collections.sort(attendances, lectureComparator);
         System.out.println("Sorted list: " + attendances);
         return attendances.size();
     }
@@ -197,6 +184,12 @@ public class StatisticsBean {
         return chart;
     }
     
+    /**
+     * Counts the total amount of lectures for the given list of courses.
+     * 
+     * @param courses
+     * @return 
+     */
     private int totalLectureCount(List<Courses> courses) {
         int total = 0;
         
@@ -308,13 +301,5 @@ public class StatisticsBean {
 
     public void setStudentId(int studentId) {
         this.studentId = studentId;
-    }
-
-    public int getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(int courseId) {
-        this.courseId = courseId;
     }
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gemtastic.attendancesystem.filters;
 
 import java.io.IOException;
@@ -18,8 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
- * @author Gemtastic
+ * Filter for making sure access is restricted to logged in users.
+ * 
+ * @author Aizic Moisen
  */
 public class LoginFilter implements Filter {
 
@@ -27,6 +23,15 @@ public class LoginFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
+    /**
+     * filtering method, triggers on all pages.
+     * 
+     * @param request
+     * @param response
+     * @param chain
+     * @throws IOException
+     * @throws ServletException 
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
@@ -41,8 +46,9 @@ public class LoginFilter implements Filter {
                 req.getRequestURI().startsWith(req.getContextPath() + "/resources/");
         boolean loginRequest = req.getRequestURI().equals(loginURL);
                 
+        // If you are logged in, it's a login page request, or a resource request go on to next step, else redirect user to the login page.
         if(loggedIn|| loginRequest || resourceRequest){
-            if(!resourceRequest){
+            if(!resourceRequest){                                                       // If it's not a resource request set the following headers.
                 resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
                 resp.setHeader("Pragma", "no-cache"); // HTTP 1.0.
                 resp.setDateHeader("Expires", 0); // Proxies.
