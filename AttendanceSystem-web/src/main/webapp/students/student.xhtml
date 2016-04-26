@@ -22,9 +22,7 @@
                         <p:outputLabel value="#{student.student.email}" />
                         
                         <strong>Image:</strong>
-                        <h:graphicImage alt="Student image" rendered="#{student.student.image == null}" value="#{student.student.image == null ? '/resources/img/no_image.jpg' : student.streamImage()}">
-                            <f:param id="student" value="#{param.student}" />
-                        </h:graphicImage>
+                        <p:graphicImage alt="Student image" value="/image/#{param.student}" height="150px" />
                     </h:panelGrid>
                 </p:panel>
             </p>

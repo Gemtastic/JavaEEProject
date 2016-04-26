@@ -89,7 +89,7 @@ create table groups (
 
 create table message (
         id serial primary key not null,
-        author integer not null references employee,
+        author integer not null references employees,
         message text not null
 );
 
@@ -134,8 +134,8 @@ values ('Head', 'master', 'master@school.com', 1, '2015-08-01');
 insert into user_types (name)
 values ('admin');
 
-insert into users (username, email, type, employee)
-values ('admin', 'admin@school.com', 1, 1);
+insert into users (username, email, failedlogins, type, employee)
+values ('admin', 'admin@school.com', 0, 1, 1);
 
 insert into login (username, password)
-values (admin, $2a$10$.9KvtMVJpSp29OXULOEx.uaquBAZd4Ssfn9P9JgAv7DnszJbFwKZC); -- admin
+values ('admin', '$2a$10$.9KvtMVJpSp29OXULOEx.uaquBAZd4Ssfn9P9JgAv7DnszJbFwKZC'); -- admin

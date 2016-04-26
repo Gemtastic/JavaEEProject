@@ -211,14 +211,6 @@ public class StudentMB {
             }
         }
     }
-
-    public StreamedContent streamImage() {
-        if (student.getImage() != null) {
-            ByteArrayInputStream img = new ByteArrayInputStream(student.getImage());
-            return new DefaultStreamedContent(img);
-        }
-        return null;
-    }
     // End not implemented file upload.
 
     public String getFirstname() {
