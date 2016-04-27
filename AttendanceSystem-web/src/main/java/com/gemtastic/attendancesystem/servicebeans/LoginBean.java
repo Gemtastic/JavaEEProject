@@ -1,4 +1,4 @@
-package com.gemtastic.attendancesystem.sessionbeans;
+package com.gemtastic.attendancesystem.servicebeans;
 
 import com.gemtastic.attendancesystem.services.interfaces.LoginServices;
 import java.io.Serializable;

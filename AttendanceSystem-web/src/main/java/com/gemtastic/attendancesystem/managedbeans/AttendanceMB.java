@@ -1,13 +1,14 @@
 package com.gemtastic.attendancesystem.managedbeans;
 
+import com.gemtastic.attendancesystem.converters.ConverterBean;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalLectureEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalUserEJBService;
 import com.gemtastic.attendancesystem.services.interfaces.LocalAttendanceEJBService;
 import com.gemtastic.attendancesystem.services.interfaces.LoginServices;
-import com.gemtastic.attendancesystem.sessionbeans.SessionBean;
-import com.gemtastic.attendancesystem.sessionbeans.StatisticsBean;
+import com.gemtastic.attendancesystem.servicebeans.SessionBean;
+import com.gemtastic.attendancesystem.servicebeans.StatisticsBean;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Lectures;
 import com.gemtastic.attendencesystem.enteties.Message;
@@ -15,7 +16,7 @@ import com.gemtastic.attendencesystem.enteties.Students;
 import com.gemtastic.attendencesystem.enteties.Users;
 import com.gemtastic.attendencesystem.helpenteties.Attendance;
 import com.gemtastic.attendencesystem.helpenteties.Statistics;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -34,7 +35,7 @@ import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 
 /**
- * Managebean for handling attendances.
+ * Managed bean for handling attendances.
  * 
  * @author Aizic Moisen
  */
@@ -136,18 +137,6 @@ public class AttendanceMB {
 //    }
 
     /**
-     * Checks if the given student was attending the given lecture.
-     * 
-     * @param lecture
-     * @param student
-     * @return 
-     */
-    public String attended(Lectures lecture, Students student) {
-        String answer = student.getLecturesList().contains(lecture) ? "Yes" : "No";
-        return answer;
-    }
-
-    /**
      * Retrieves the percentage attendance on the course total of the given 
      * course and the given student.
      * 
@@ -205,9 +194,10 @@ public class AttendanceMB {
      */
     private void sendJMSMessageToMyQueue() {
         System.out.println("About to send message!");
+        ConverterBean converter = new ConverterBean();
         Message msg = new Message();
         try {
-            String text = "Attendance was submitted for course " + course.getName() + " and lecture of the date " + lecture.getDate() + ".";
+            String text = "Attendance was submitted for course " + course.getName() + " and lecture of the date " + converter.convertDateToString(lecture.getDate()) + " on " + converter.convertDateToString(new Date()) + ".";
             Users user = uEJB.findByUser(sessionBean.getUsername());
             msg.setAuthor(user.getEmployee());
             msg.setMessage(text);

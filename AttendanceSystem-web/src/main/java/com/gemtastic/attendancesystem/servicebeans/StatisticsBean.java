@@ -1,4 +1,4 @@
-package com.gemtastic.attendancesystem.sessionbeans;
+package com.gemtastic.attendancesystem.servicebeans;
 
 import com.gemtastic.attendancesystem.converters.ConverterBean;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
@@ -67,6 +67,19 @@ public class StatisticsBean {
     public void init() {
         overall = new LineChartModel();
         drawOverallAttendance();
+    }
+    
+    /**
+     * Checks if the given student was attending the given lecture.
+     * 
+     * @param lecture
+     * @param student
+     * @return 
+     */
+    public String attended(Lectures lecture, Students student) {
+        Students result = sEJB.readOne(student.getId());
+        String answer = result.getLecturesList().contains(lecture) ? "Yes" : "No";
+        return answer;
     }
 
     /**
@@ -242,7 +255,6 @@ public class StatisticsBean {
      * @return
      */
     private int calculateCourseDays(Courses course) {
-        Statistics newStat = new Statistics();
         long start = course.getStart().getTime();
         long stop = course.getStop().getTime();
 

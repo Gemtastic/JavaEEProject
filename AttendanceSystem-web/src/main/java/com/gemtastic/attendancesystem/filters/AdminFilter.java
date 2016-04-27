@@ -1,6 +1,6 @@
 package com.gemtastic.attendancesystem.filters;
 
-import com.gemtastic.attendancesystem.sessionbeans.SessionBean;
+import com.gemtastic.attendancesystem.servicebeans.SessionBean;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

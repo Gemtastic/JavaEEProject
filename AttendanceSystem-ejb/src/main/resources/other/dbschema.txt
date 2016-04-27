@@ -4,6 +4,21 @@ create database attendance owner app;
 
 \c attendance
 
+create table address (
+        id serial primary key not null,
+        street text not null,
+        zip integer not null,
+        town text not null,
+        country text,
+        unique (street, zip, town, country)
+);
+
+create table course_level (
+        id serial primary key not null,
+        level text not null,
+        unique (level)
+);
+
 create table students(
 	id serial primary key not null,
 	firstname text not null,
@@ -12,6 +27,8 @@ create table students(
 	email text not null,
 	phone integer,
 	reg_date date not null, -- registration date of the student
+        date_of_birth date not null,
+        address integer not null references address,
 	image bytea -- Image of the student, may be null.
 );
 
@@ -28,6 +45,7 @@ create table employees(
 	email text not null,
 	phone integer,
 	position integer not null references position,
+        address integer not null references address,
 	hire_date date not null
 );
 
@@ -37,7 +55,10 @@ create table courses(
 	points integer not null,
 	start date not null,	-- Date course starts
 	stop date not null,	-- Date course ends
-	teacher integer not null references employees
+	teacher integer not null references employees,
+        course_code text not null,
+        head_of_course integer not null references employees,
+        level integer not null references course_level
 );
 
 create table user_types(
@@ -90,7 +111,8 @@ create table groups (
 create table message (
         id serial primary key not null,
         author integer not null references employees,
-        message text not null
+        message text not null,
+        created date not null
 );
 
 grant all on attendance to PUBLIC;
@@ -98,6 +120,12 @@ grant all on attendance to PUBLIC;
 grant all on login to PUBLIC;
 
 grant all on groups to PUBLIC;
+
+grant all on address to PUBLIC;
+grant all on address_id_seq to PUBLIC;
+
+grant all on course_level to PUBLIC;
+grant all on course_level_id_seq to PUBLIC;
 
 grant all on message to PUBLIC;
 grant all on message_id_seq to PUBLIC;
@@ -128,11 +156,26 @@ grant all on users_id_seq to PUBLIC;
 insert into position (name) 
 values ('headmaster');
 
+insert into position (name)
+values ('teacher');
+
 insert into employees(firstname, lastname, email, position, hire_date) 
 values ('Head', 'master', 'master@school.com', 1, '2015-08-01');
 
 insert into user_types (name)
 values ('admin');
+
+insert into user_types (name)
+values ('user');
+
+insert into course_level (level)
+values ('beginner');
+
+insert into course_level (level)
+values ('intermediate');
+
+insert into course_level (level)
+values ('master');
 
 insert into users (username, email, failedlogins, type, employee)
 values ('admin', 'admin@school.com', 0, 1, 1);

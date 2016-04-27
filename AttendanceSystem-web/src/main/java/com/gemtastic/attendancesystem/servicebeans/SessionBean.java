@@ -1,4 +1,4 @@
-package com.gemtastic.attendancesystem.sessionbeans;
+package com.gemtastic.attendancesystem.servicebeans;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;

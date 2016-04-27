@@ -31,10 +31,10 @@
                     <f:param name="student" value="#{student.student.id}" />
                 </p:commandButton>
                 <p:button value="Edit Student" outcome="editStudent?student=#{student.student.id}" />
-            </p>
-
-            
+            </p>            
             <br/>
+            
+            
             <p:panel rendered="#{student.student.coursesList.size() > 0}">
                 <p>
                     <p:chart type="line" model="#{statistics.overall}" style="height:400px;"/>
@@ -52,7 +52,7 @@
                         <p:outputLabel value="#{converter.convertDateToString(lect.date)}" />
                     </p:column>
                     <p:column headerText="Attended">
-                        <p:outputLabel value="#{attendances.attended(lect, student.student)}" />
+                        <p:outputLabel value="#{statistics.attended(lect, student.student)}" />
                     </p:column>
                 </p:dataTable>
             </ui:repeat>
