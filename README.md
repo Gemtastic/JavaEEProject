@@ -19,19 +19,25 @@ A simple attendance management system produced in JavaEE for my JavaEE class in 
 3. Run the SQL code found in the [db schema](https://github.com/Gemtastic/JavaEEProject/blob/master/AttendanceSystem-ejb/src/main/resources/other/dbschema.txt) in the postgres terminal.
 4. Set up JMS resource:
 
-    Connection factory name: jms/myconnectionfactory
-    Resource type: javax.jms.QueueConnectionFactory
-    Destination resource name: jms/myQueue
-    Physical Destination Name: attendance
-    Resource type: Queue
+    **Connection factory name:** jms/myconnectionfactory
+    
+    **Resource type:** javax.jms.QueueConnectionFactory
+    
+    **Destination resource name:** jms/myQueue
+    
+    **Physical Destination Name:** attendance
+    
+    **Resource type:** Queue
 
 5. Setup jdbc resources:
 
-    Resource name: jdbc/attendance
+    **Resource name:** jdbc/attendance
     
-    Connection pool name: post-gre-sql_attendance_appPool
-    Resource type: Data source
-    Data source class name: org.postgresql.ds.PGSimpleDataSource
+    **Connection pool name:** post-gre-sql_attendance_appPool
+    
+    **Resource type:** Data source
+    
+    **Data source class name:** org.postgresql.ds.PGSimpleDataSource
     
 6. Clean and build the maven project
 7. Clean and build the `.RAR`
