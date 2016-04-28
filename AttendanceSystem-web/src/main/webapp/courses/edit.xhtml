@@ -17,12 +17,12 @@
 
             <p>
                 <p:outputLabel for="code" value="Course code:" /><br/>
-                               <p:inputText id="code" value="#{courses.course.courseCode}" required="true" />
+                <p:inputText id="code" value="#{courses.course.courseCode}" required="true" />
             </p>
 
             <p>
                 <p:outputLabel for="spinner" value="Points:" /><br/>
-                <p:spinner id="spinner" value="#{courses.course.points}" />
+                <p:spinner id="spinner" value="#{courses.course.points}" required="true"  />
             </p>
 
             <p>
@@ -44,7 +44,7 @@
 
             <p>
                 <p:outputLabel for="headmaster" value="Headmaster in charge:" /><br/>
-                <p:selectOneMenu id="headmaster" value="#{courses.course.teacher}" style="width:125px" converter="#{employeeConverter}">
+                <p:selectOneMenu id="headmaster" value="#{courses.course.headOfCourse}" style="width:125px" converter="#{employeeConverter}">
                     <f:selectItems value="#{courses.headmasters}" var="vari" itemValue="#{vari}" itemLabel="#{vari.firstname} #{vari.lastname}" />
                 </p:selectOneMenu>
             </p>
@@ -58,12 +58,12 @@
 
             <p>
                 <p:outputLabel for="studentTot" value="Student total:" /><br/>
-                <p:spinner id="studentTot" value="#{courses.course.maxStudent}" />
+                <p:spinner id="studentTot" value="#{courses.course.maxStudent}" required="true"  />
             </p>
 
             <p>
                 <p:outputLabel for="lang" value="Language:" /><br/>
-                <p:inputText id="lang" value="#{courses.language}" />
+                <p:inputText id="lang" value="#{courses.course.language.language == null? courses.language : courses.language.language}" />
             </p>
 
             <p:commandButton value="Submit" action="#{courses.editCourse}">

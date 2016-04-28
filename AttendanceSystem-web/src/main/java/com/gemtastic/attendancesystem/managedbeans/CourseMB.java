@@ -75,7 +75,6 @@ public class CourseMB {
     private void setUp() {
         try {
             course = cEJB.readOne(id);
-            System.out.println("Lecture size: " + course.getLecturesList().size());
         } catch (NullPointerException e) {
             System.out.println("Parameter id is null. " + e);
         } catch (Exception e) {
@@ -89,10 +88,22 @@ public class CourseMB {
      * @return
      */
     public String onSubmit() {
+        readLanguage();
+
+        Courses c = cEJB.upsert(course);
+        course = c;
+        return "course?id=" + id + "&faces-redirect=true";
+    }
+    
+    /**
+     * Checks language string for null and set course with the existing or new
+     * language if language is not null.
+     */
+    private void readLanguage() {
         if (language != null) {
             Languages l = cEJB.findLanguageByName(language);
 
-            if (l != null) {
+            if (l == null) {
                 l = new Languages();
                 l.setLanguage(language);
                 course.setLanguage(l);
@@ -100,10 +111,6 @@ public class CourseMB {
                 course.setLanguage(l);
             }
         }
-
-        Courses c = cEJB.upsert(course);
-        course = c;
-        return "course";
     }
 
     /**
@@ -124,6 +131,7 @@ public class CourseMB {
      * @return
      */
     public String editCourse() {
+        readLanguage();
         cEJB.upsert(course);
         return "course?id=" + id + "&faces-redirect=true";
     }
