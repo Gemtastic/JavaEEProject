@@ -1,6 +1,12 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.gemtastic.attendencesystem.enteties;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,13 +18,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Aizic Moisen
+ * @author Gemtastic
  */
 @Entity
 @Table(name = "message")
@@ -26,7 +34,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Message.findAll", query = "SELECT m FROM Message m"),
     @NamedQuery(name = "Message.findById", query = "SELECT m FROM Message m WHERE m.id = :id"),
-    @NamedQuery(name = "Message.findByMessage", query = "SELECT m FROM Message m WHERE m.message = :message")})
+    @NamedQuery(name = "Message.findByMessage", query = "SELECT m FROM Message m WHERE m.message = :message"),
+    @NamedQuery(name = "Message.findByCreated", query = "SELECT m FROM Message m WHERE m.created = :created")})
 public class Message implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,6 +49,11 @@ public class Message implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "message")
     private String message;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "created")
+    @Temporal(TemporalType.DATE)
+    private Date created;
     @JoinColumn(name = "author", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Employees author;
@@ -51,9 +65,10 @@ public class Message implements Serializable {
         this.id = id;
     }
 
-    public Message(Integer id, String message) {
+    public Message(Integer id, String message, Date created) {
         this.id = id;
         this.message = message;
+        this.created = created;
     }
 
     public Integer getId() {
@@ -70,6 +85,14 @@ public class Message implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     public Employees getAuthor() {

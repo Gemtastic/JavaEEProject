@@ -14,8 +14,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -41,7 +43,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Students.findBySocSecNo", query = "SELECT s FROM Students s WHERE s.socSecNo = :socSecNo"),
     @NamedQuery(name = "Students.findByEmail", query = "SELECT s FROM Students s WHERE s.email = :email"),
     @NamedQuery(name = "Students.findByPhone", query = "SELECT s FROM Students s WHERE s.phone = :phone"),
-    @NamedQuery(name = "Students.findByRegDate", query = "SELECT s FROM Students s WHERE s.regDate = :regDate")})
+    @NamedQuery(name = "Students.findByRegDate", query = "SELECT s FROM Students s WHERE s.regDate = :regDate"),
+    @NamedQuery(name = "Students.findByDateOfBirth", query = "SELECT s FROM Students s WHERE s.dateOfBirth = :dateOfBirth")})
 public class Students implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -77,6 +80,11 @@ public class Students implements Serializable {
     @Column(name = "reg_date")
     @Temporal(TemporalType.DATE)
     private Date regDate;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "date_of_birth")
+    @Temporal(TemporalType.DATE)
+    private Date dateOfBirth;
     @Lob
     @Column(name = "image")
     private byte[] image;
@@ -84,6 +92,9 @@ public class Students implements Serializable {
     private List<Courses> coursesList;
     @ManyToMany(mappedBy = "studentsList")
     private List<Lectures> lecturesList;
+    @JoinColumn(name = "address", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Address address;
 
     public Students() {
     }
@@ -92,13 +103,14 @@ public class Students implements Serializable {
         this.id = id;
     }
 
-    public Students(Integer id, String firstname, String lastname, long socSecNo, String email, Date regDate) {
+    public Students(Integer id, String firstname, String lastname, long socSecNo, String email, Date regDate, Date dateOfBirth) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.socSecNo = socSecNo;
         this.email = email;
         this.regDate = regDate;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Integer getId() {
@@ -157,6 +169,14 @@ public class Students implements Serializable {
         this.regDate = regDate;
     }
 
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
     public byte[] getImage() {
         return image;
     }
@@ -181,6 +201,14 @@ public class Students implements Serializable {
 
     public void setLecturesList(List<Lectures> lecturesList) {
         this.lecturesList = lecturesList;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override

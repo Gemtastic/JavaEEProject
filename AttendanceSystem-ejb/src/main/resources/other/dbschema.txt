@@ -8,15 +8,33 @@ create table address (
         id serial primary key not null,
         street text not null,
         zip integer not null,
-        town text not null,
+        city text not null,
         country text,
-        unique (street, zip, town, country)
+        unique (street, zip, city, country)
+);
+
+create table languages (
+        id serial primary key not null,
+        language text not null,
+        unique (language)
 );
 
 create table course_level (
         id serial primary key not null,
         level text not null,
         unique (level)
+);
+
+create table position(
+	id serial primary key not null,
+	name text not null,
+	unique (name)
+);
+
+create table user_types(
+	id serial primary key not null,
+	name text not null,
+	unique (name)
 );
 
 create table students(
@@ -30,12 +48,6 @@ create table students(
         date_of_birth date not null,
         address integer not null references address,
 	image bytea -- Image of the student, may be null.
-);
-
-create table position(
-	id serial primary key not null,
-	name text not null,
-	unique (name)
 );
 
 create table employees(
@@ -58,13 +70,16 @@ create table courses(
 	teacher integer not null references employees,
         course_code text not null,
         head_of_course integer not null references employees,
-        level integer not null references course_level
+        level integer not null references course_level,
+        language integer references languages,
+        max_student integer
 );
 
-create table user_types(
-	id serial primary key not null,
-	name text not null,
-	unique (name)
+create table message (
+        id serial primary key not null,
+        author integer not null references employees,
+        message text not null,
+        created date not null
 );
 
 create table users(
@@ -108,18 +123,14 @@ create table groups (
         groupname text not null
 );
 
-create table message (
-        id serial primary key not null,
-        author integer not null references employees,
-        message text not null,
-        created date not null
-);
-
 grant all on attendance to PUBLIC;
 
 grant all on login to PUBLIC;
 
 grant all on groups to PUBLIC;
+
+grant all on languages to PUBLIC;
+grant all on languages_id_seq to PUBLIC;
 
 grant all on address to PUBLIC;
 grant all on address_id_seq to PUBLIC;
@@ -159,8 +170,11 @@ values ('headmaster');
 insert into position (name)
 values ('teacher');
 
-insert into employees(firstname, lastname, email, position, hire_date) 
-values ('Head', 'master', 'master@school.com', 1, '2015-08-01');
+insert into address (city, street, country, zip)
+values ('Gothenburg', 'Drottninggatan 4', 'Sweden', '41114');
+
+insert into employees(firstname, lastname, email, position, hire_date, address) 
+values ('Head', 'master', 'master@school.com', 1, '2015-08-01', 1);
 
 insert into user_types (name)
 values ('admin');

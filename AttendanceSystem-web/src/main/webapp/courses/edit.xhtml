@@ -16,6 +16,11 @@
             </p>
 
             <p>
+                <p:outputLabel for="code" value="Course code:" /><br/>
+                               <p:inputText id="code" value="#{courses.course.courseCode}" required="true" />
+            </p>
+
+            <p>
                 <p:outputLabel for="spinner" value="Points:" /><br/>
                 <p:spinner id="spinner" value="#{courses.course.points}" />
             </p>
@@ -35,6 +40,30 @@
                 <p:selectOneMenu id="emp" value="#{courses.course.teacher}" style="width:125px" converter="#{employeeConverter}">
                     <f:selectItems value="#{courses.teachers}" var="vari" itemValue="#{vari}" itemLabel="#{vari.firstname} #{vari.lastname}" />
                 </p:selectOneMenu>
+            </p>
+
+            <p>
+                <p:outputLabel for="headmaster" value="Headmaster in charge:" /><br/>
+                <p:selectOneMenu id="headmaster" value="#{courses.course.teacher}" style="width:125px" converter="#{employeeConverter}">
+                    <f:selectItems value="#{courses.headmasters}" var="vari" itemValue="#{vari}" itemLabel="#{vari.firstname} #{vari.lastname}" />
+                </p:selectOneMenu>
+            </p>
+
+            <p>
+                <p:outputLabel for="level" value="Difficulty Level:" /><br/>
+                <p:selectOneMenu id="level" value="#{courses.course.level}" style="width:125px" converter="#{levelConverter}">
+                    <f:selectItems value="#{courses.levels}" var="vari" itemValue="#{vari}" itemLabel="#{vari.level}" />
+                </p:selectOneMenu>
+            </p>
+
+            <p>
+                <p:outputLabel for="studentTot" value="Student total:" /><br/>
+                <p:spinner id="studentTot" value="#{courses.course.maxStudent}" />
+            </p>
+
+            <p>
+                <p:outputLabel for="lang" value="Language:" /><br/>
+                <p:inputText id="lang" value="#{courses.language}" />
             </p>
 
             <p:commandButton value="Submit" action="#{courses.editCourse}">

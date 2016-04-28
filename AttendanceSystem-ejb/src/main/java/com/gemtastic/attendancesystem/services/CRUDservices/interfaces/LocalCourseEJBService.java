@@ -6,7 +6,10 @@
 package com.gemtastic.attendancesystem.services.CRUDservices.interfaces;
 
 import com.gemtastic.attendancesystem.services.interfaces.CRUDService;
+import com.gemtastic.attendencesystem.enteties.CourseLevel;
 import com.gemtastic.attendencesystem.enteties.Courses;
+import com.gemtastic.attendencesystem.enteties.Languages;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -15,5 +18,10 @@ import javax.ejb.Local;
  */
 @Local
 public interface LocalCourseEJBService extends CRUDService<Courses> {
+
+    public List<CourseLevel> getLevels();
     
+    public CourseLevel findLevel(int id);
+    
+    public Languages findLanguageByName(String name);
 }

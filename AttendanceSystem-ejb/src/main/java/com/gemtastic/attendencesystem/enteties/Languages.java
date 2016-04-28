@@ -8,7 +8,6 @@ package com.gemtastic.attendencesystem.enteties;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,13 +27,13 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Gemtastic
  */
 @Entity
-@Table(name = "user_types")
+@Table(name = "languages")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "UserTypes.findAll", query = "SELECT u FROM UserTypes u"),
-    @NamedQuery(name = "UserTypes.findById", query = "SELECT u FROM UserTypes u WHERE u.id = :id"),
-    @NamedQuery(name = "UserTypes.findByName", query = "SELECT u FROM UserTypes u WHERE u.name = :name")})
-public class UserTypes implements Serializable {
+    @NamedQuery(name = "Languages.findAll", query = "SELECT l FROM Languages l"),
+    @NamedQuery(name = "Languages.findById", query = "SELECT l FROM Languages l WHERE l.id = :id"),
+    @NamedQuery(name = "Languages.findByLanguage", query = "SELECT l FROM Languages l WHERE l.language = :language")})
+public class Languages implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -45,21 +44,21 @@ public class UserTypes implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
-    @Column(name = "name")
-    private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "type")
-    private List<Users> usersList;
+    @Column(name = "language")
+    private String language;
+    @OneToMany(mappedBy = "language")
+    private List<Courses> coursesList;
 
-    public UserTypes() {
+    public Languages() {
     }
 
-    public UserTypes(Integer id) {
+    public Languages(Integer id) {
         this.id = id;
     }
 
-    public UserTypes(Integer id, String name) {
+    public Languages(Integer id, String language) {
         this.id = id;
-        this.name = name;
+        this.language = language;
     }
 
     public Integer getId() {
@@ -70,21 +69,21 @@ public class UserTypes implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     @XmlTransient
-    public List<Users> getUsersList() {
-        return usersList;
+    public List<Courses> getCoursesList() {
+        return coursesList;
     }
 
-    public void setUsersList(List<Users> usersList) {
-        this.usersList = usersList;
+    public void setCoursesList(List<Courses> coursesList) {
+        this.coursesList = coursesList;
     }
 
     @Override
@@ -97,10 +96,10 @@ public class UserTypes implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserTypes)) {
+        if (!(object instanceof Languages)) {
             return false;
         }
-        UserTypes other = (UserTypes) object;
+        Languages other = (Languages) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -109,7 +108,7 @@ public class UserTypes implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gemtastic.attendencesystem.enteties.UserTypes[ id=" + id + " ]";
+        return "com.gemtastic.attendencesystem.enteties.Languages[ id=" + id + " ]";
     }
     
 }

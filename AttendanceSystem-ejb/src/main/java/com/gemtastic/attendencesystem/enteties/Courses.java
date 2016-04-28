@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.gemtastic.attendencesystem.enteties;
 
 import java.io.Serializable;
@@ -27,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Aizic Moisen
+ * @author Gemtastic
  */
 @Entity
 @Table(name = "courses")
@@ -38,7 +43,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Courses.findByName", query = "SELECT c FROM Courses c WHERE c.name = :name"),
     @NamedQuery(name = "Courses.findByPoints", query = "SELECT c FROM Courses c WHERE c.points = :points"),
     @NamedQuery(name = "Courses.findByStart", query = "SELECT c FROM Courses c WHERE c.start = :start"),
-    @NamedQuery(name = "Courses.findByStop", query = "SELECT c FROM Courses c WHERE c.stop = :stop")})
+    @NamedQuery(name = "Courses.findByStop", query = "SELECT c FROM Courses c WHERE c.stop = :stop"),
+    @NamedQuery(name = "Courses.findByCourseCode", query = "SELECT c FROM Courses c WHERE c.courseCode = :courseCode"),
+    @NamedQuery(name = "Courses.findByMaxStudent", query = "SELECT c FROM Courses c WHERE c.maxStudent = :maxStudent")})
 public class Courses implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -66,14 +73,30 @@ public class Courses implements Serializable {
     @Column(name = "stop")
     @Temporal(TemporalType.DATE)
     private Date stop;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "course_code")
+    private String courseCode;
+    @Column(name = "max_student")
+    private Integer maxStudent;
     @JoinTable(name = "students_courses", joinColumns = {
         @JoinColumn(name = "course", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "student", referencedColumnName = "id")})
     @ManyToMany
     private List<Students> studentsList;
+    @JoinColumn(name = "level", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private CourseLevel level;
     @JoinColumn(name = "teacher", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Employees teacher;
+    @JoinColumn(name = "head_of_course", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Employees headOfCourse;
+    @JoinColumn(name = "language", referencedColumnName = "id")
+    @ManyToOne
+    private Languages language;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course")
     private List<Lectures> lecturesList;
 
@@ -84,12 +107,13 @@ public class Courses implements Serializable {
         this.id = id;
     }
 
-    public Courses(Integer id, String name, int points, Date start, Date stop) {
+    public Courses(Integer id, String name, int points, Date start, Date stop, String courseCode) {
         this.id = id;
         this.name = name;
         this.points = points;
         this.start = start;
         this.stop = stop;
+        this.courseCode = courseCode;
     }
 
     public Integer getId() {
@@ -132,6 +156,22 @@ public class Courses implements Serializable {
         this.stop = stop;
     }
 
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public Integer getMaxStudent() {
+        return maxStudent;
+    }
+
+    public void setMaxStudent(Integer maxStudent) {
+        this.maxStudent = maxStudent;
+    }
+
     @XmlTransient
     public List<Students> getStudentsList() {
         return studentsList;
@@ -141,12 +181,36 @@ public class Courses implements Serializable {
         this.studentsList = studentsList;
     }
 
+    public CourseLevel getLevel() {
+        return level;
+    }
+
+    public void setLevel(CourseLevel level) {
+        this.level = level;
+    }
+
     public Employees getTeacher() {
         return teacher;
     }
 
     public void setTeacher(Employees teacher) {
         this.teacher = teacher;
+    }
+
+    public Employees getHeadOfCourse() {
+        return headOfCourse;
+    }
+
+    public void setHeadOfCourse(Employees headOfCourse) {
+        this.headOfCourse = headOfCourse;
+    }
+
+    public Languages getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Languages language) {
+        this.language = language;
     }
 
     @XmlTransient

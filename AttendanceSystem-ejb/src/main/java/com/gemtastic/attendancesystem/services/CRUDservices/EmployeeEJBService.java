@@ -72,8 +72,9 @@ public class EmployeeEJBService implements LocalEmployeeEJBService {
      * @param position
      * @return List{@literal <}Employees{@literal >}
      */
-    public List<Employees> findAllByPosition(Position position) {
-        Position query = em.createNamedQuery("Position.findByName", Position.class).setParameter("name", position.getName()).getSingleResult();
+    @Override
+    public List<Employees> findAllByPosition(String position) {
+        Position query = em.createNamedQuery("Position.findByName", Position.class).setParameter("name", position).getSingleResult();
         return query.getEmployeesList();
     }
 }

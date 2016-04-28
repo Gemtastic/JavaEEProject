@@ -20,7 +20,7 @@ public class EmployeeMB {
     @EJB
     private EmployeeEJBService eEJB;
     
-    private List<Employees> teachers = eEJB.findAllByPosition(position);
+    private List<Employees> teachers = eEJB.findAllByPosition(position.getName());
     
     public List<Employees> findAllTeachers (){
         return teachers;

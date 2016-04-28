@@ -1,11 +1,14 @@
 package com.gemtastic.attendancesystem.services.CRUDservices;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
+import com.gemtastic.attendencesystem.enteties.CourseLevel;
 import com.gemtastic.attendencesystem.enteties.Courses;
+import com.gemtastic.attendencesystem.enteties.Languages;
 import java.util.List;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -73,5 +76,38 @@ public class CourseEJBService implements LocalCourseEJBService {
     @PreDestroy
     public void destruct() {
         em.close();
+    }
+
+    /**
+     * Returns a list all level types.
+     * @return 
+     */
+    @Override
+    public List<CourseLevel> getLevels() {
+        return em.createNamedQuery("CourseLevel.findAll").getResultList();
+    }
+
+    /**
+     * Returns a Course level with the given id.
+     * @param id
+     * @return 
+     */
+    @Override
+    public CourseLevel findLevel(int id) {
+        return em.find(CourseLevel.class, id);
+    }
+
+    /**
+     * Returns a language of the given name if it exists.
+     * @param name
+     * @return 
+     */
+    @Override
+    public Languages findLanguageByName(String name) {
+        try {
+            return em.createNamedQuery("Languages.findByLanguage", Languages.class).setParameter("language", name).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

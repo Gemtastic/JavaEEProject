@@ -6,16 +6,44 @@
     <ui:define name="content">
         <h:form>
             <h1>#{courses.course.name}</h1>
-            <strong>Points:</strong> #{courses.course.points} <br/>
-            <strong>Teacher in charge:</strong> #{courses.course.teacher.firstname} #{courses.course.teacher.lastname}<br/>
-            <strong>Start Date:</strong> #{courses.course.start != null? converter.convertDateToString(courses.course.start) : ''}<br/>
-            <strong>Stop Date:</strong> #{courses.course.stop != null? converter.convertDateToString(courses.course.stop) : ''}<br/>
+            <strong>Course code:</strong> #{courses.course.courseCode}<br/>
+            <h:panelGrid columns="2" cellspacing="5">
+                <h:panelGrid columns="2" cellspacing="5">
+                    <strong>Points:</strong><br/>
+                    #{courses.course.points} <br/>
+
+                    <strong>Teacher in charge:</strong><br/> 
+                    #{courses.course.teacher.firstname} #{courses.course.teacher.lastname}<br/>
+
+                    <strong>Headmaster in charge:</strong><br/> 
+                    #{courses.course.headOfCourse.firstname} #{courses.course.headOfCourse.lastname}<br/>
+
+                    <strong>Max student count:</strong><br/>
+                    #{courses.course.maxStudent}<br/>
+                </h:panelGrid>
+
+                <h:panelGrid columns="2" cellspacing="5">
+                    <strong>Start Date:</strong><br/> 
+                    #{courses.course.start != null? converter.convertDateToString(courses.course.start) : ''}<br/>
+
+                    <strong>Stop Date:</strong><br/> 
+                    #{courses.course.stop != null? converter.convertDateToString(courses.course.stop) : ''}<br/>
+
+                    <strong>Difficulty level:</strong><br/>
+                    #{courses.course.level.level}<br/>
+
+                    <strong>Language:</strong><br/>
+                    #{courses.course.language.language}<br/>
+                </h:panelGrid>
+            </h:panelGrid>
+
             <br/>
             <p:commandButton value="Delete course" ajax="false" action="#{courses.deleteCourse}">
                 <f:param name="id" value="#{param.id}" />
             </p:commandButton>
             <p:button value="Edit course" outcome="edit?id=#{param.id}" />
             <br/>
+
             <h3>Lectures</h3>
             <p:dataTable var="l" value="#{courses.course.lecturesList}">
                 <p:column headerText="Name">
@@ -25,7 +53,7 @@
                     <p:outputLabel value="#{converter.convertDateToString(l.date)}" />
                 </p:column>
                 <p:column headerText="Start time">
-                        <p:outputLabel value="#{converter.convertDateToTime(l.start)}" />
+                    <p:outputLabel value="#{converter.convertDateToTime(l.start)}" />
                 </p:column>
                 <p:column headerText="Stop time">
                     <p:outputLabel value="#{converter.convertDateToTime(l.stop)}" />
@@ -42,7 +70,7 @@
             </p:dataTable>
             <br/>
             <p:button value="Add Lecture" outcome="lectures/addLecture.xhtml?id=#{courses.course.id}" />
-            
+
             <h3>Students</h3>
             <p:dataTable var="s" value="#{courses.course.studentsList}">
                 <p:column headerText="Name">

@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.gemtastic.attendencesystem.enteties;
 
 import java.io.Serializable;
@@ -25,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Aizic Moisen
+ * @author Gemtastic
  */
 @Entity
 @Table(name = "employees")
@@ -71,13 +76,18 @@ public class Employees implements Serializable {
     private Date hireDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher")
     private List<Courses> coursesList;
-    @JoinColumn(name = "position", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Position position;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "headOfCourse")
+    private List<Courses> coursesList1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     private List<Message> messageList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
     private List<Users> usersList;
+    @JoinColumn(name = "address", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Address address;
+    @JoinColumn(name = "position", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Position position;
 
     public Employees() {
     }
@@ -151,12 +161,13 @@ public class Employees implements Serializable {
         this.coursesList = coursesList;
     }
 
-    public Position getPosition() {
-        return position;
+    @XmlTransient
+    public List<Courses> getCoursesList1() {
+        return coursesList1;
     }
 
-    public void setPosition(Position position) {
-        this.position = position;
+    public void setCoursesList1(List<Courses> coursesList1) {
+        this.coursesList1 = coursesList1;
     }
 
     @XmlTransient
@@ -175,6 +186,22 @@ public class Employees implements Serializable {
 
     public void setUsersList(List<Users> usersList) {
         this.usersList = usersList;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     @Override

@@ -28,13 +28,13 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Gemtastic
  */
 @Entity
-@Table(name = "user_types")
+@Table(name = "course_level")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "UserTypes.findAll", query = "SELECT u FROM UserTypes u"),
-    @NamedQuery(name = "UserTypes.findById", query = "SELECT u FROM UserTypes u WHERE u.id = :id"),
-    @NamedQuery(name = "UserTypes.findByName", query = "SELECT u FROM UserTypes u WHERE u.name = :name")})
-public class UserTypes implements Serializable {
+    @NamedQuery(name = "CourseLevel.findAll", query = "SELECT c FROM CourseLevel c"),
+    @NamedQuery(name = "CourseLevel.findById", query = "SELECT c FROM CourseLevel c WHERE c.id = :id"),
+    @NamedQuery(name = "CourseLevel.findByLevel", query = "SELECT c FROM CourseLevel c WHERE c.level = :level")})
+public class CourseLevel implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -45,21 +45,21 @@ public class UserTypes implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
-    @Column(name = "name")
-    private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "type")
-    private List<Users> usersList;
+    @Column(name = "level")
+    private String level;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "level")
+    private List<Courses> coursesList;
 
-    public UserTypes() {
+    public CourseLevel() {
     }
 
-    public UserTypes(Integer id) {
+    public CourseLevel(Integer id) {
         this.id = id;
     }
 
-    public UserTypes(Integer id, String name) {
+    public CourseLevel(Integer id, String level) {
         this.id = id;
-        this.name = name;
+        this.level = level;
     }
 
     public Integer getId() {
@@ -70,21 +70,21 @@ public class UserTypes implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLevel() {
+        return level;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLevel(String level) {
+        this.level = level;
     }
 
     @XmlTransient
-    public List<Users> getUsersList() {
-        return usersList;
+    public List<Courses> getCoursesList() {
+        return coursesList;
     }
 
-    public void setUsersList(List<Users> usersList) {
-        this.usersList = usersList;
+    public void setCoursesList(List<Courses> coursesList) {
+        this.coursesList = coursesList;
     }
 
     @Override
@@ -97,10 +97,10 @@ public class UserTypes implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserTypes)) {
+        if (!(object instanceof CourseLevel)) {
             return false;
         }
-        UserTypes other = (UserTypes) object;
+        CourseLevel other = (CourseLevel) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -109,7 +109,7 @@ public class UserTypes implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gemtastic.attendencesystem.enteties.UserTypes[ id=" + id + " ]";
+        return "com.gemtastic.attendencesystem.enteties.CourseLevel[ id=" + id + " ]";
     }
     
 }
