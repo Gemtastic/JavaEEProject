@@ -23,19 +23,35 @@ public class AddressEJBService implements LocalAddressEJBService {
     @PersistenceContext
     EntityManager em;
 
+    /**
+     * Returns an address with the provided id if it exists.
+     * 
+     * @param id
+     * @return 
+     */
     @Override
     public Address readOne(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return em.find(Address.class, id);
     }
 
+    /**
+     * Returns a list containing all addresses.
+     * 
+     * @return 
+     */
     @Override
     public List<Address> findAll() {
         return em.createNamedQuery("Address.findAll").getResultList();
     }
 
+    /**
+     * Removes the given address.
+     * @param address 
+     */
     @Override
     public void delete(Address address) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Address merged = em.merge(address);
+        em.remove(address);
     }
 
     /**
@@ -60,6 +76,13 @@ public class AddressEJBService implements LocalAddressEJBService {
         return address;
     }
     
+    /**
+     * Takes an address and matches its fields with the existing addresses to 
+     * find a match. Returns a match or null.
+     * 
+     * @param address
+     * @return 
+     */
     private Address getExistingAddress(Address address) {
         List<Address> list = null;
         try {

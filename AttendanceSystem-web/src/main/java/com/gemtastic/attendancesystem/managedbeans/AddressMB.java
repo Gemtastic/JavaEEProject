@@ -5,6 +5,7 @@
  */
 package com.gemtastic.attendancesystem.managedbeans;
 
+import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalAddressEJBService;
 import com.gemtastic.attendencesystem.enteties.Address;
 import javax.ejb.EJB;
 
@@ -18,7 +19,7 @@ public class AddressMB {
     LocalAddressEJBService aEJB;
     
     public Address saveAddress(Address address) {
-        
+        throw new UnsupportedOperationException();
     }
     
 }

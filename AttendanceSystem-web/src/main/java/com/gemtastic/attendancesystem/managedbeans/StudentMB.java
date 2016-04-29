@@ -1,5 +1,6 @@
 package com.gemtastic.attendancesystem.managedbeans;
 
+import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalAddressEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
 import com.gemtastic.attendencesystem.enteties.Address;
@@ -32,6 +33,9 @@ public class StudentMB {
 
     @EJB
     LocalStudentEJBService sEJB;
+    
+    @EJB
+    LocalAddressEJBService aEJB;
 
     @EJB
     LocalCourseEJBService cEJB;
@@ -114,6 +118,11 @@ public class StudentMB {
         student.setPhone(phone);
         student.setRegDate(Date.valueOf(LocalDate.now()));
         student.setSocSecNo(socialSecurityNo);
+        
+        /** Persists and returns the address if it doesn't exists or 
+         * finds the existing one and returns that.
+         */
+        student.setAddress(aEJB.upsert(assembleAddress()));
         if (file != null) {
             upload();
         }

@@ -30,7 +30,7 @@
                         <p:outputLabel for="phone" value="Phone:" /><br/>
                         <p:inputText id="phone" value="#{student.phone}" /><br/>
 
-                        <p:outputLabel for="dob" value="Date of birth:" />
+                        <p:outputLabel for="dob" value="Date of birth:" /><br/>
                         <p:calendar id="dob" value="#{student.date_of_birth}" required="true" pattern="dd-mm-yyyy" showWeek="true" />
                     </h:panelGrid>
 
@@ -48,9 +48,6 @@
                         <p:inputText id="country" value="#{student.country}" />
                     </h:panelGrid>
                 </h:panelGrid>
-
-
-
 
                 <p:outputLabel for="image" value="Image:" /><br/>
                 <p:growl id="messages" showDetail="true" />
