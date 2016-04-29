@@ -2,9 +2,9 @@ package com.gemtastic.attendancesystem.managedbeans;
 
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalStudentEJBService;
+import com.gemtastic.attendencesystem.enteties.Address;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Students;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -19,8 +19,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import org.apache.commons.io.IOUtils;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -52,6 +50,12 @@ public class StudentMB {
     public long socialSecurityNo;
     public String email;
     public int phone;
+    private Date date_of_birth;
+    private String street;
+    private String city;
+    private int zip;
+    private String country;
+    private Address address;
     private UploadedFile file;
     private boolean disabled = true;
     private List<Students> students;
@@ -171,6 +175,19 @@ public class StudentMB {
             }
         }
         return unregistered;
+    }
+    
+    /**
+     * Transforms the fields into an address.
+     * @return 
+     */
+    private Address assembleAddress(){
+        address = new Address();
+        address.setCity(city);
+        address.setStreet(street);
+        address.setZip(zip);
+        address.setCountry(country);
+        return address;
     }
 
     /**
@@ -331,5 +348,53 @@ public class StudentMB {
 
     public void setYears(List<Integer> years) {
         this.years = years;
+    }
+
+    public Date getDate_of_birth() {
+        return date_of_birth;
+    }
+
+    public void setDate_of_birth(Date date_of_birth) {
+        this.date_of_birth = date_of_birth;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public int getZip() {
+        return zip;
+    }
+
+    public void setZip(int zip) {
+        this.zip = zip;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

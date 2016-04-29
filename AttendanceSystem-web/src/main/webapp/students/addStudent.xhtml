@@ -17,16 +17,40 @@
                     <f:validateLength maximum="30" />
                 </p:inputText><br/>
 
-                <p:outputLabel for="socialsecno" value="Social security number: (12 digits)" /><br/>
-                <p:inputText id="socialsecno" value="#{student.socialSecurityNo}" required="true" requiredMessage="You must enter a social security number!" validatorMessage="You must enter a full 12 digit social security number!">
-                    <f:validateLength maximum="12" minimum="12" />
-                </p:inputText><br/>
+                <h:panelGrid columns="2">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="socialsecno" value="Social security number: (12 digits)" /><br/>
+                        <p:inputText id="socialsecno" value="#{student.socialSecurityNo}" required="true" requiredMessage="You must enter a social security number!" validatorMessage="You must enter a full 12 digit social security number!">
+                            <f:validateLength maximum="12" minimum="12" />
+                        </p:inputText><br/>
 
-                <p:outputLabel for="email" value="Email:" /><br/>
-                <p:inputText id="email" value="#{student.email}" required="true" requiredMessage="You must enter an email!" /><br/>
+                        <p:outputLabel for="email" value="Email:" /><br/>
+                        <p:inputText id="email" value="#{student.email}" required="true" requiredMessage="You must enter an email!" /><br/>
 
-                <p:outputLabel for="phone" value="Phone:" /><br/>
-                <p:inputText id="phone" value="#{student.phone}" /><br/>
+                        <p:outputLabel for="phone" value="Phone:" /><br/>
+                        <p:inputText id="phone" value="#{student.phone}" /><br/>
+
+                        <p:outputLabel for="dob" value="Date of birth:" />
+                        <p:calendar id="dob" value="#{student.date_of_birth}" required="true" pattern="dd-mm-yyyy" showWeek="true" />
+                    </h:panelGrid>
+
+                    <h:panelGrid>
+                        <p:outputLabel for="street" value="Street:" />
+                        <p:inputText id="street" value="#{student.street}" required="true" />
+                        
+                        <p:outputLabel for="city" value="City:" />
+                        <p:inputText id="city" value="#{student.city}" required="true" />
+                        
+                        <p:outputLabel for="zip" value="Zip:" />
+                        <p:inputText id="zip" value="#{student.zip}" required="true" />
+                        
+                        <p:outputLabel for="country" value="Country:" />
+                        <p:inputText id="country" value="#{student.country}" />
+                    </h:panelGrid>
+                </h:panelGrid>
+
+
+
 
                 <p:outputLabel for="image" value="Image:" /><br/>
                 <p:growl id="messages" showDetail="true" />
