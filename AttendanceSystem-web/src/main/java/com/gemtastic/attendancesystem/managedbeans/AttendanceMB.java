@@ -84,8 +84,6 @@ public class AttendanceMB {
 
     @PostConstruct
     public void init() {
-        System.out.println("You initialized an attendance bean! " + id);
-        System.out.println("Param: " + FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         if (id != 0) {
             Lectures l = lEJB.readOne(id);
             if(l != null){
@@ -201,6 +199,7 @@ public class AttendanceMB {
             Users user = uEJB.findByUser(sessionBean.getUsername());
             msg.setAuthor(user.getEmployee());
             msg.setMessage(text);
+            msg.setCreated(new Date());
             ObjectMessage message = context.createObjectMessage();
             message.setObject(msg);
             
