@@ -22,7 +22,7 @@
                         <p:outputLabel value="#{student.student.email}" />
                         
                         <strong>Image:</strong>
-                        <p:graphicImage alt="Student image" value="/image/#{param.student}" height="150px" />
+                        <p:graphicImage alt="Student image" rendered="#{student.student.image != null}" value="/image/#{param.student}" height="150px" />
                     </h:panelGrid>
                 </p:panel>
             </p>

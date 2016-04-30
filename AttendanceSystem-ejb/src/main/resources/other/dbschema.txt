@@ -9,8 +9,8 @@ create table address (
         street text not null,
         zip integer not null,
         city text not null,
-        country text,
-        unique (street, zip, city, country)
+        country text --,
+        -- unique (street, zip, city, country)
 );
 
 create table languages (

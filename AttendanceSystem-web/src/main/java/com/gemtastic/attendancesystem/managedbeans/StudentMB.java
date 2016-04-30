@@ -7,10 +7,9 @@ import com.gemtastic.attendencesystem.enteties.Address;
 import com.gemtastic.attendencesystem.enteties.Courses;
 import com.gemtastic.attendencesystem.enteties.Students;
 import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -116,18 +115,20 @@ public class StudentMB {
         student.setFirstname(firstname);
         student.setLastname(lastname);
         student.setPhone(phone);
-        student.setRegDate(Date.valueOf(LocalDate.now()));
+        student.setRegDate(new Date());
         student.setSocSecNo(socialSecurityNo);
+        student.setDateOfBirth(date_of_birth);
         
         /** Persists and returns the address if it doesn't exists or 
          * finds the existing one and returns that.
          */
-        student.setAddress(aEJB.upsert(assembleAddress()));
+        Address a = aEJB.upsert(assembleAddress());
+        student.setAddress(a);
         if (file != null) {
             upload();
         }
-        sEJB.upsert(student);
-        return "students?faces-redirect=true";
+        student = sEJB.upsert(student);
+        return "student?faces-redirect=true&student=" + student.getId();
     }
 
     /**

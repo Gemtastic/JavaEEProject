@@ -34,7 +34,7 @@ public class ImageServlet extends HttpServlet {
         int id = Integer.valueOf(req.getPathInfo().substring(1));
         byte[] img = sEJB.readOne(id).getImage();
         
-        if(img != null) {
+        if(img != null && img.length > 0) {
             resp.getOutputStream().write(img);
             resp.getOutputStream().close();
         } else {

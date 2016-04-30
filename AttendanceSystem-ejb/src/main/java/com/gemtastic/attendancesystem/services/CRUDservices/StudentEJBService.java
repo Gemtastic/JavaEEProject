@@ -75,7 +75,14 @@ public class StudentEJBService implements LocalStudentEJBService {
      */
     @Override
     public Students upsert(Students student) {
-        Students result = em.merge(student);
+        Students result = null;
+        try {
+            result = em.merge(student);
+            return result;
+        } catch(Exception e){
+            System.out.println("Cound not merge student: " + e);
+        }
+        
         return result;
     }
 

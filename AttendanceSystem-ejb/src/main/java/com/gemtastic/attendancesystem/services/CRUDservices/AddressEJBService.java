@@ -51,7 +51,7 @@ public class AddressEJBService implements LocalAddressEJBService {
     @Override
     public void delete(Address address) {
         Address merged = em.merge(address);
-        em.remove(address);
+        em.remove(merged);
     }
 
     /**
@@ -63,17 +63,16 @@ public class AddressEJBService implements LocalAddressEJBService {
      */
     @Override
     public Address upsert(Address address) {
-        Address result = null;
+        
+        Address result = getExistingAddress(address);
+        
         try {
-            result = em.merge(address);
+            result = em.merge(result);
         } catch (Exception e) {
             System.out.println("Could not merge: " + e);
         }
         
-        if(result == null) {
-            return getExistingAddress(address);
-        }
-        return address;
+        return result;
     }
     
     /**
@@ -84,9 +83,9 @@ public class AddressEJBService implements LocalAddressEJBService {
      * @return 
      */
     private Address getExistingAddress(Address address) {
-        List<Address> list = null;
+        List<Address> list;
         try {
-            list = em.createNamedQuery("SELECT a FROM Address a WHERE street = :street AND city = :city AND zip = zip", Address.class)
+            list = em.createQuery("SELECT a FROM Address a WHERE a.street = :street AND a.city = :city AND a.zip = :zip")
                     .setParameter("city", address.getCity())
                     .setParameter("street", address.getStreet())
                     .setParameter("zip", address.getZip())
@@ -96,7 +95,9 @@ public class AddressEJBService implements LocalAddressEJBService {
             list = new ArrayList<>();
         }
         
-        if(list.size() > 1) {
+        if(list.isEmpty()){
+            return address;
+        } else if(list.size() > 1) {
             Address result = null;
             for(Address a : list) {
                 if (a.getCountry().equals(address.getCountry())) {
