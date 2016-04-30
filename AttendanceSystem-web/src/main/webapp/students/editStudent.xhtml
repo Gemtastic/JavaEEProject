@@ -16,19 +16,42 @@
                     <f:validateLength maximum="30" />
                 </p:inputText><br/>
 
-                <p:outputLabel for="socialsecno" value="Social security number: (12 digits)" /><br/>
-                <p:inputText id="socialsecno" value="#{student.student.socSecNo}" required="true" requiredMessage="You must enter a social security number!" validatorMessage="You must enter a full 12 digit social security number!">
-                    <f:validateLength maximum="12" minimum="12" />
-                </p:inputText><br/>
+                <h:panelGrid columns="2">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="socialsecno" value="Social security number: (12 digits)" /><br/>
+                        <p:inputText id="socialsecno" value="#{student.student.socSecNo}" required="true" requiredMessage="You must enter a social security number!" validatorMessage="You must enter a full 12 digit social security number!">
+                            <f:validateLength maximum="12" minimum="12" />
+                        </p:inputText><br/>
 
-                <p:outputLabel for="email" value="Email:" /><br/>
-                <p:inputText id="email" value="#{student.student.email}" required="true" requiredMessage="You must enter an email!" /><br/>
+                        <p:outputLabel for="email" value="Email:" /><br/>
+                        <p:inputText id="email" value="#{student.student.email}" required="true" requiredMessage="You must enter an email!" /><br/>
 
-                <p:outputLabel for="phone" value="Phone:" /><br/>
-                <p:inputText id="phone" value="#{student.student.phone}" /><br/>
+                        <p:outputLabel for="phone" value="Phone:" /><br/>
+                        <p:inputText id="phone" value="#{student.student.phone}" /><br/>
 
-                <p:outputLabel for="image" value="Image:" /><br/>
+                        <p:outputLabel for="dob" value="Date of birth:" /><br/>
+                        <p:calendar id="dob" value="#{student.student.dateOfBirth}" required="true" pattern="dd-mm-yyyy" showWeek="true" />
+                    </h:panelGrid>
+
+                    <h:panelGrid>
+                        <p:outputLabel for="street" value="Street:" />
+                        <p:inputText id="street" value="#{student.student.address.street}" required="true" />
+                        
+                        <p:outputLabel for="city" value="City:" />
+                        <p:inputText id="city" value="#{student.student.address.city}" required="true" />
+                        
+                        <p:outputLabel for="zip" value="Zip:" />
+                        <p:inputText id="zip" value="#{student.student.address.zip}" required="true" />
+                        
+                        <p:outputLabel for="country" value="Country:" />
+                        <p:inputText id="country" value="#{student.student.address.country}" />
+                    </h:panelGrid>
+                </h:panelGrid>
+
+                <p:outputLabel for="img" value="Current image:" /><br/>
+                <p:graphicImage id="img" alt="Student image" rendered="#{student.student.image != null}" value="/image/#{param.student}" height="150px" /><br/>
                 <p:growl id="messages" showDetail="true" />
+                <p:outputLabel for="image" value="New image:" /><br/>
                 <p:fileUpload id="image" value="#{student.file}" mode="simple" fileLimit="1" allowTypes="*.jpg;*.png;*.gif;" /><br/>
                 <br/>
                 <p:commandButton value="Save" ajax="false" action="#{student.editStudent}" disabled="#{!student.disabled}">

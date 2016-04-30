@@ -99,7 +99,11 @@ public class StudentMB {
      * @return
      */
     public String editStudent() {
-        upload();
+        
+        
+        if(file.getSize() > 1) {
+            upload();
+        }
         sEJB.upsert(student);
         return "student?faces-redirect=true&student=" + studentId;
     }

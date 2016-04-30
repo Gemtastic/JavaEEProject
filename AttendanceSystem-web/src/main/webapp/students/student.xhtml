@@ -8,26 +8,37 @@
             <p>
                 <h2>Student</h2>
                 <p:panel>
-                    <h:panelGrid id="grid" columns="2" cellpadding="5">
-                        <strong>First name:</strong>
-                        <p:outputLabel value="#{student.student.firstname}" />
+                    <h:panelGrid id="grid" columns="4" cellspacing="10" >
+                            <strong>First name:</strong>
+                            <p:outputLabel value="#{student.student.firstname}" />
+                            <strong>Last name:</strong>
+                            <p:outputLabel value="#{student.student.lastname}" />
 
-                        <strong>Last name:</strong>
-                        <p:outputLabel value="#{student.student.lastname}" />
+                            <strong>Street:</strong>
+                            <p:outputLabel value="#{student.student.address.street}" />
+                            <strong>City:</strong>
+                            <p:outputLabel value="#{student.student.address.city}" />
 
-                        <strong>Enrollment date:</strong>
-                        <p:outputLabel value="#{converter.convertDateToString(student.student.regDate)}" />
+                            <strong>Zip:</strong>
+                            <p:outputLabel value="#{student.student.address.zip}" />
+                            <strong>Country:</strong>
+                            <p:outputLabel value="#{student.student.address.country}" />
 
-                        <strong>Email:</strong>
-                        <p:outputLabel value="#{student.student.email}" />
-                        
-                        <strong>Image:</strong>
-                        <p:graphicImage alt="Student image" rendered="#{student.student.image != null}" value="/image/#{param.student}" height="150px" />
+                            <strong>Phone:</strong>
+                            <p:outputLabel value="#{student.student.phone}" />
+                            <strong>Enrollment date:</strong>
+                            <p:outputLabel value="#{converter.convertDateToString(student.student.regDate)}" />
+
+                            <strong>Email:</strong>
+                            <p:outputLabel value="#{student.student.email}" />
+                            <strong>Image:</strong>
+                            <p:graphicImage alt="Student image" rendered="#{student.student.image != null}" value="/image/#{param.student}" height="150px" />
+
                     </h:panelGrid>
                 </p:panel>
             </p>
             <p>
-                <p:commandButton value="Delete Student" ajax="false" action="#{student.deleteStudent}">
+                <p:commandButton value="Delete Student" ajax="false" action="#{student.deleteStudent}" style="background-color: red;">
                     <f:param name="student" value="#{student.student.id}" />
                 </p:commandButton>
                 <p:button value="Edit Student" outcome="editStudent?student=#{student.student.id}" />

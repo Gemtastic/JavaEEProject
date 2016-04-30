@@ -92,7 +92,7 @@ public class CourseMB {
 
         Courses c = cEJB.upsert(course);
         course = c;
-        return "course?id=" + id + "&faces-redirect=true";
+        return "course?id=" + course.getId() + "&faces-redirect=true";
     }
     
     /**
