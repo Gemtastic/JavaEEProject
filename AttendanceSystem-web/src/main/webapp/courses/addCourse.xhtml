@@ -27,12 +27,15 @@
 
             <p>
                 <p:outputLabel for="start" value="Course start date:" /><br/>
-                <p:calendar id="start" value="#{courses.course.start}" pattern="dd-mm-yyyy" showWeek="true" required="true" requiredMessage="You must enter a start date!" />
+                <p:calendar id="start" binding="#{startDateComponent}" value="#{courses.course.start}" pattern="dd-mm-yyyy" showWeek="true" required="true" requiredMessage="You must enter a start date!" />
             </p>
 
             <p>
                 <p:outputLabel for="stop" value="Course stop date:" /><br/>
-                <p:calendar id="stop" value="#{courses.course.stop}" pattern="dd-mm-yyyy" showWeek="true" required="true" requiredMessage="You must enter a stop date!" />
+                <p:calendar id="stop" value="#{courses.course.stop}" pattern="dd-mm-yyyy" showWeek="true" required="true" requiredMessage="You must enter a stop date!">
+                    <f:validator validatorId="dateRangeValidator" />
+                    <f:attribute name="startDateComponent" value="#{startDateComponent}" />
+                </p:calendar>
             </p>
 
             <p>
