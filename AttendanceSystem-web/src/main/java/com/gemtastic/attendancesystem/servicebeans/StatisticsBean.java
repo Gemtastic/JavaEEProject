@@ -230,7 +230,7 @@ public class StatisticsBean {
             overall.setTitle("Attendance graph");
             overall.setZoom(false);
             overall.getAxis(AxisType.Y).setLabel("Attended lectures");
-            overall.getAxis(AxisType.Y).setMax(totalLectureCount(student.getCoursesList()));
+            overall.getAxis(AxisType.Y).setMax(totalLectureCount(student.getCoursesList()) + 2);
 
             DateAxis axis = new DateAxis("Dates");
             axis.setTickAngle(-50);
