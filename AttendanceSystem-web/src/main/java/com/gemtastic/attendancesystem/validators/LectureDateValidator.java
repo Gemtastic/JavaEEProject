@@ -1,6 +1,7 @@
 package com.gemtastic.attendancesystem.validators;
 
 import com.gemtastic.attendencesystem.enteties.Courses;
+import com.gemtastic.attendencesystem.enteties.Lectures;
 import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -19,21 +20,28 @@ public class LectureDateValidator implements Validator {
 
     @Override
     public void validate(FacesContext fc, UIComponent component, Object value) throws ValidatorException {
-        if(value == null){
+        if (value == null) {
             return;
         }
-        
+
+        Courses course;
+
         UIInput courseComponent = (UIInput) component.getAttributes().get("selectedCourse");
-        
-        if(!courseComponent.isValid()) {
+        Lectures lecture = (Lectures) component.getAttributes().get("lecture");
+
+        if (!courseComponent.isValid()) {
             return;
         }
-        
-        Courses course = (Courses) courseComponent.getValue();
-               
+
+        if (courseComponent.getValue() != null) {
+            course = (Courses) courseComponent.getValue();
+        } else {
+            course = lecture.getCourse();
+        }
+
         Date enteredDate = (Date) value;
-        
-        if(!enteredDate.after(course.getStart()) || !enteredDate.before(course.getStop())) {
+
+        if (!enteredDate.after(course.getStart()) || !enteredDate.before(course.getStop())) {
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Lecure date is not inside the course's time span.", null));
         }
     }
