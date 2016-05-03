@@ -1,5 +1,6 @@
 package com.gemtastic.attendancesystem.managedbeans;
 
+import com.gemtastic.attendancesystem.converters.ConverterBean;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalCourseEJBService;
 import com.gemtastic.attendancesystem.services.CRUDservices.interfaces.LocalLectureEJBService;
 import com.gemtastic.attendencesystem.enteties.Courses;
@@ -17,27 +18,30 @@ import javax.faces.bean.RequestScoped;
 
 /**
  * Managed bean for the lecture.
- * 
+ *
  * @author Aizic Moisen
  */
-@ManagedBean(name="lecture")
+@ManagedBean(name = "lecture")
 @RequestScoped
 public class LectureMB {
-    
+
     @EJB
     private LocalLectureEJBService lEJB;
-    
+
     @EJB
     private LocalCourseEJBService cEJB;
-    
+
     private Courses param;
-    
-    @ManagedProperty(value="#{param.id}")
+
+    @ManagedProperty(value = "#{param.id}")
     private int paramId;
-    
-    @ManagedProperty(value="#{param.lecture}")
+
+    @ManagedProperty(value = "#{param.lecture}")
     private int lectureId;
-    
+
+    @ManagedProperty(value = "#{converter}")
+    private ConverterBean converter;
+
     public int id;
     public Courses course;
     public Date date;
@@ -46,17 +50,18 @@ public class LectureMB {
     public Employees teacher;
     private Lectures lecture;
     private boolean disabled;
-    
+    private String courseName;
+
     public List<Lectures> lectures;
     public List<Lectures> attendance;
     public List<Courses> courses;
-    
+
     private Attendance[] att;
-    
+
     /**
      * Creates a new lecture and redirects to its course.
-     * 
-     * @return 
+     *
+     * @return
      */
     public String onCreate() {
         Lectures l = setLecture();
@@ -64,22 +69,24 @@ public class LectureMB {
         String path = "/courses/course?faces-redirect=true&id=" + course.getId();
         return path;
     }
-    
+
     /**
      * Updates a lecture and redirects to its course.
-     * @return 
+     *
+     * @return
      */
     public String updateLecture() {
         lEJB.upsert(lecture);
         return "/courses/course?faces-redirect=true&id=" + lecture.getCourse().getId();
     }
-    
+
     /**
      * Creates a new lecture with information from the parameter's course.
-     * @return 
+     *
+     * @return
      */
     public Lectures setLecture() {
-        if(course == null && param != null) {
+        if (course == null && param != null) {
             course = param;
         }
         Lectures l = new Lectures();
@@ -89,52 +96,59 @@ public class LectureMB {
         l.setStop(stopTime);
         return l;
     }
-    
+
     @PostConstruct
     public void init() {
         lectures = lEJB.findAll();
         courses = cEJB.findAll();
-        if(paramId != 0) {
+        if (paramId != 0) {
             param = cEJB.readOne(paramId);
+            if (param != null) {
+                courseName = param.getName()
+                        + " (" + converter.convertDateToString(param.getStart())
+                        + " - " + converter.convertDateToString(param.getStop()) + ")";
+            }
             disabled = true;
         } else {
             disabled = false;
         }
-        if(lectureId != 0) {
+        if (lectureId != 0) {
             lecture = lEJB.readOne(lectureId);
             date = date != null ? date : lecture.getDate();
-            startTime = startTime!= null ? startTime : lecture.getStart();
+            startTime = startTime != null ? startTime : lecture.getStart();
             stopTime = stopTime != null ? stopTime : lecture.getStop();
         }
     }
-    
+
     /**
      * Deletes a lecture and redirects to its course.
-     * 
-     * @return 
+     *
+     * @return
      */
-    public String deleteLecture(){
+    public String deleteLecture() {
         Lectures placeholder = new Lectures();
         placeholder.setId(lectureId);
         lEJB.delete(placeholder);
         return "course?id=" + paramId + "&faces-redirect=true";
     }
-    
+
     /**
      * Returns a student list based off of the id property.
-     * @return 
+     *
+     * @return
      */
-    public List<Students> getStudentList(){
+    public List<Students> getStudentList() {
         Lectures l = lEJB.readOne(id);
         return l.getStudentsList();
     }
-    
+
     /**
      * Returns a lecture of the given id.
+     *
      * @param id
-     * @return 
+     * @return
      */
-    public Lectures getLectureById(int id){
+    public Lectures getLectureById(int id) {
         Lectures l = lEJB.readOne(id);
         return l;
     }
@@ -260,5 +274,21 @@ public class LectureMB {
 
     public void setLectureId(int lectureId) {
         this.lectureId = lectureId;
+    }
+
+    public ConverterBean getConverter() {
+        return converter;
+    }
+
+    public void setConverter(ConverterBean converter) {
+        this.converter = converter;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 }

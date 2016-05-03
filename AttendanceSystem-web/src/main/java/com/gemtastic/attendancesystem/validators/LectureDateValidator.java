@@ -1,7 +1,6 @@
 package com.gemtastic.attendancesystem.validators;
 
 import com.gemtastic.attendencesystem.enteties.Courses;
-import com.gemtastic.attendencesystem.enteties.Lectures;
 import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -24,10 +23,8 @@ public class LectureDateValidator implements Validator {
             return;
         }
 
-        Courses course;
-
         UIInput courseComponent = (UIInput) component.getAttributes().get("selectedCourse");
-        Lectures lecture = (Lectures) component.getAttributes().get("lecture");
+        Courses course;
 
         if (!courseComponent.isValid()) {
             return;
@@ -35,8 +32,10 @@ public class LectureDateValidator implements Validator {
 
         if (courseComponent.getValue() != null) {
             course = (Courses) courseComponent.getValue();
+        } else if (courseComponent.getValue() == null && component.getAttributes().get("course") != null) {
+            course = (Courses) component.getAttributes().get("course");
         } else {
-            course = lecture.getCourse();
+            return;
         }
 
         Date enteredDate = (Date) value;

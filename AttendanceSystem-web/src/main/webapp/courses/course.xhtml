@@ -63,8 +63,8 @@
                         <f:param name="id" value="#{param.id}" />
                         <f:param name="lecture" value="#{l.id}"  />
                     </p:commandButton>
-                    <p:button value="Edit" outcome="lectures/editLecture.xhtml?lecture=#{l.id}&amp;id=#{l.id}" >
-                        <f:param name="id" value="#{l.id}" />
+                    <p:button value="Edit" outcome="lectures/editLecture.xhtml?lecture=#{l.id}&amp;id=#{param.id}" >
+                        <f:param name="id" value="#{param.id}" />
                     </p:button>
                 </p:column>
             </p:dataTable>

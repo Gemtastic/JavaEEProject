@@ -9,9 +9,9 @@
         <h:form>
             <p>
                 <p:outputLabel for="courses" value="Select course:" /><br/>
-                <p:selectOneMenu id="courses" binding="#{selectedCourse}" value="#{lecture.course}" style="width:200px" converter="#{courseConverter}" disabled="#{lecture.disabled}">
-                    <f:selectItem itemLabel="#{lecture.param.name != null ? lecture.param.name : 'select a course...'}" itemValue="#{lecture.param != null ? lecture.param : lecture.courses.get(0)}" itemDisabled="#{!lecture.disabled}" />
-                    <f:selectItems value="#{lecture.courses}" var="vari" itemValue="#{vari}" itemLabel="#{vari.name}" />
+                <p:selectOneMenu id="courses" binding="#{selectedCourse}" value="#{lecture.course}" converter="#{courseConverter}" disabled="#{lecture.disabled}">
+                    <f:selectItem itemLabel="#{lecture.param.name != null ? lecture.courseName : 'select a course...'}" itemValue="#{lecture.param != null ? lecture.param : lecture.courses.get(0)}" />
+                    <f:selectItems value="#{lecture.courses}" var="vari" itemValue="#{vari}" itemLabel="#{vari.name} (#{converter.convertDateToString(vari.start)} - #{converter.convertDateToString(vari.stop)})" />
                 </p:selectOneMenu>
             </p>
             <p>
@@ -19,6 +19,7 @@
                 <p:calendar id="date" value="#{lecture.date}" pattern="dd-MM-yyyy" showWeek="true" required="true" requiredMessage="You must enter a date!">
                     <f:validator validatorId="lectureDateValidator" />
                     <f:attribute name="selectedCourse" value="#{selectedCourse}" />
+                    <f:attribute name="course" value="#{lecture.param}" />
                 </p:calendar>
             </p>
 
