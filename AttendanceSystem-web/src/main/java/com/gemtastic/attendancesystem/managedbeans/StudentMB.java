@@ -52,7 +52,7 @@ public class StudentMB {
     public String lastname;
     public long socialSecurityNo;
     public String email;
-    public int phone;
+    public String phone;
     private Date date_of_birth;
     private String street;
     private String city;
@@ -284,14 +284,6 @@ public class StudentMB {
         this.email = email;
     }
 
-    public int getPhone() {
-        return phone;
-    }
-
-    public void setPhone(int phone) {
-        this.phone = phone;
-    }
-
     public Students getStudent() {
         return student;
     }
@@ -410,5 +402,13 @@ public class StudentMB {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

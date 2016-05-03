@@ -73,8 +73,10 @@ public class Students implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "email")
     private String email;
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Size(max = 2147483647)
     @Column(name = "phone")
-    private Integer phone;
+    private String phone;
     @Basic(optional = false)
     @NotNull
     @Column(name = "reg_date")
@@ -153,11 +155,11 @@ public class Students implements Serializable {
         this.email = email;
     }
 
-    public Integer getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(Integer phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

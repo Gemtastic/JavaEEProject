@@ -43,7 +43,7 @@ create table students(
 	lastname text not null,
 	soc_sec_no bigint not null, -- social security number to connect with CSN
 	email text not null,
-	phone integer,
+	phone text,
 	reg_date date not null, -- registration date of the student
         date_of_birth date not null,
         address integer not null references address,

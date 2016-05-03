@@ -5,7 +5,7 @@
 
     <h:form>
         <div id="messageWrapper">
-            <div id="message">You are logged in.!<br/>
+            <div id="message">
                 <p:commandLink value="Log out" action="#{login.logOut()}" /><br/>
                 <p:link value="View Inbox" outcome="/admin/inbox.xhtml" rendered="#{sessionBean.usertype == 'admin'? true : false}" />
             </div> 

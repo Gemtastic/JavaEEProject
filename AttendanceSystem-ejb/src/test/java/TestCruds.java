@@ -92,7 +92,7 @@ public class TestCruds {
             student.setEmail("test@test.com");
             student.setFirstname("Herp");
             student.setLastname("Derp");
-            student.setPhone(0000000000);
+            student.setPhone("0000000000");
             student.setRegDate(Date.valueOf(LocalDate.of(2015, 8, 01)));
             student.setSocSecNo(000000000000);
 
