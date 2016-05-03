@@ -35,7 +35,6 @@ public class MessageMB {
      * @return 
      */
     public String deleteMessage(int id) {
-        System.out.println("You want to delete: " + id);
         mEJB.delete(mEJB.readOne(id));
         return "/admin/inbox.xhtml?faces-redirect=true";
     }

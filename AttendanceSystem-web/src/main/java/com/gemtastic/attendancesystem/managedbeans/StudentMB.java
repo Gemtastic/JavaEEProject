@@ -219,7 +219,6 @@ public class StudentMB {
         return "course.xhtml?id=" + courseId + "&faces-redirect=true";
     }
 
-    // Not implemented file upload
     public UploadedFile getFile() {
         return file;
     }
@@ -242,7 +241,6 @@ public class StudentMB {
             }
         }
     }
-    // End not implemented file upload.
 
     public String getFirstname() {
         return firstname;

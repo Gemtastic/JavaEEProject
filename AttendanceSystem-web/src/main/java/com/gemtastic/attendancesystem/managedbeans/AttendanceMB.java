@@ -25,7 +25,6 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.jms.JMSConnectionFactory;
 import javax.jms.JMSContext;
@@ -65,9 +64,7 @@ public class AttendanceMB {
 
     @ManagedProperty("#{param.id}")
     private int id;
-
-    @EJB
-    private LoginServices loginService;
+    
     @EJB
     LocalAttendanceEJBService aEJB;
     @EJB
@@ -123,16 +120,6 @@ public class AttendanceMB {
         
         return "/courses/course?faces-redirect=true&id=" + course.getId();
     }
-    
-    
-
-    // TODO useless
-//    public String viewAttendance(Lectures l) {
-//        System.out.println("You're viewing the attendance!");
-//        System.out.println("lecture: " + l);
-//        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("lecture", l);
-//        return "lectures/attendance?faces-redirect=true";
-//    }
 
     /**
      * Retrieves the percentage attendance on the course total of the given 
@@ -191,7 +178,6 @@ public class AttendanceMB {
      * Sends a message to the message queue.
      */
     private void sendJMSMessageToMyQueue() {
-        System.out.println("About to send message!");
         ConverterBean converter = new ConverterBean();
         Message msg = new Message();
         try {

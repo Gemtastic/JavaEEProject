@@ -156,12 +156,6 @@ public class CourseMB {
         return b;
     }
 
-    // TODO: useless
-//    public void addStudentToCourse() throws IOException{
-//        System.out.println("Redirecting to studens...");
-//        FacesContext.getCurrentInstance().getExternalContext()
-//            .redirect("../students/addToCourse.xhtml");
-//    }
     public CourseMB() {
     }
 

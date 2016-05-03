@@ -78,7 +78,14 @@ public class StatisticsBean {
      */
     public String attended(Lectures lecture, Students student) {
         Students result = sEJB.readOne(student.getId());
-        String answer = result.getLecturesList().contains(lecture) ? "Yes" : "No";
+        Lectures lectResult = lEJB.readOne(lecture.getId());
+        
+        String answer;
+        if(result.getLecturesList().contains(lectResult) || lectResult.getStudentsList().contains(result)) {
+            answer = "Yes";
+        } else {
+            answer = "No";
+        }
         return answer;
     }
 
@@ -90,14 +97,13 @@ public class StatisticsBean {
      * @return
      */
     public int fetchLecturesAttendedByMonth(Date firstDayOfMonth) {
-        System.out.println("About to get attendance.");
         // Converts the given date to Localdates of the first and last dates of the month.
         LocalDate firstDay = LocalDate.ofEpochDay(firstDayOfMonth.getTime()).withDayOfMonth(1);
         LocalDate lastDay = LocalDate.of(firstDay.getYear(), firstDay.getMonthValue(), firstDay.lengthOfMonth());
-        System.out.println("First day of month: " + firstDay + ", Last day of month: " + lastDay);
+
         List<Lectures> attendances = lEJB.findByStudentAndDate(studentId, firstDay, lastDay);
         Collections.sort(attendances, lectureComparator);
-        System.out.println("Sorted list: " + attendances);
+
         return attendances.size();
     }
 
@@ -134,7 +140,6 @@ public class StatisticsBean {
         Date last = null;
 
         if (dates.isEmpty()) {
-            System.out.println("Dates is empty!");
             first = course.getStart();
             last = course.getStop();
         } else {
@@ -151,7 +156,7 @@ public class StatisticsBean {
         }
         dates.put("first", first);
         dates.put("last", last);
-        System.out.println("First date: " + first + ", Last date: " + last);
+
         return dates;
     }
 
@@ -191,7 +196,6 @@ public class StatisticsBean {
             for (Lectures l : lectures) {
                 if (l.getStudentsList().contains(student)) {
                     attendance++;
-                    System.out.println("Date: " + converter.convertDateToString(l.getDate()) + ", Attendance: " + attendance);
                     chart.set(converter.convertDateToString(l.getDate()), attendance);
                 }
             }
