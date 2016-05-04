@@ -58,7 +58,7 @@ public class LoginBean implements Serializable {
         if (session != null) {
             return doLogout();
         }
-        return "login.xhtml?faces-redirect=true";
+        return "/login.xhtml?faces-redirect=true";
     }
 
     /**
@@ -106,7 +106,7 @@ public class LoginBean implements Serializable {
         sessionBean.setLoggedIn(false);
         sessionBean.setUsername("");
         sessionBean.setUsertype("");
-        return "login.xhtml?faces-redirect=true";
+        return "/login.xhtml?faces-redirect=true";
     }
 
     public void setUsername(String username) {
