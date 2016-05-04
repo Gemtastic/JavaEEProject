@@ -40,7 +40,7 @@ public class LectureDateValidator implements Validator {
 
         Date enteredDate = (Date) value;
 
-        if (!enteredDate.after(course.getStart()) || !enteredDate.before(course.getStop())) {
+        if (!(enteredDate.compareTo(course.getStart()) >= 0 && enteredDate.compareTo(course.getStop()) <= 0)) {
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Lecure date is not inside the course's time span.", null));
         }
     }
