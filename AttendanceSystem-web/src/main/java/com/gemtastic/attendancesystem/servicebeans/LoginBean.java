@@ -45,9 +45,9 @@ public class LoginBean implements Serializable {
         boolean verified = loginService.verify(username, password);
         if (verified) {
             doLogin();
-            return "index.xhtml?faces-redirect=true";
+            return "/index.xhtml?faces-redirect=true";
         }
-        return "login.xhtml?faces-redirect=true";
+        return "/login.xhtml?faces-redirect=true";
     }
 
     /**
